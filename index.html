@@ -583,11 +583,12 @@
   }
   .about-body {
     font-size: 15px;
-    line-height: 1.8;
-    color: var(--mid);
-    max-width: 52ch;
+    line-height: 1.8; /* Generous line height for readable body text */
+    color: var(--mid); /* Overrides the muted gray so bolded terms pop to full black */
+    max-width: 52ch; /* Constrains line length to ~52 characters for comfortable reading */
   }
   .about-body strong {
+    /* Inline emphasis within the body paragraph */
     color: var(--ink);
     font-weight: 500;
   }
@@ -598,12 +599,13 @@
     border-top: 0.5px solid var(--rule);
   }
   .timeline-item {
+   /* Each entry in the experience timeline */
     display: grid;
-    grid-template-columns: 6rem 1fr;
+    grid-template-columns: 6rem 1fr; /* Fixed 6rem year column, flexible content column */
     gap: 1.5rem;
     padding: 1.2rem 0;
-    border-bottom: 0.5px solid var(--rule);
-    align-items: baseline;
+    border-bottom: 0.5px solid var(--rule); /* Rule between each timeline entry */
+    align-items: baseline; /* Aligns the year and title text along their baselines */
   }
   .timeline-year {
     font-family: var(--mono);
@@ -621,11 +623,17 @@
     margin-top: 2px;
   }
 
-  /* CONTACT */
+/* ============================================================
+   CONTACT SECTION
+   Two-column layout: large display headline on the left,
+   link rows on the right. Right column uses flex-end so
+   the links stack from the bottom up.
+   ============================================================ */
+ 
   .contact-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 40vh;
+    min-height: 40vh; /* Ensures the section has substantial vertical presence */
   }
   .contact-left {
     padding: 3rem 2.5rem;
@@ -635,12 +643,14 @@
     justify-content: space-between;
   }
   .contact-headline {
+   /* The large "Get in touch." stacked heading */
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 0.95;
+    line-height: 0.95; /* Tight stacking for multi-line display heading */
   }
   .contact-right {
+   /* Contact links sit at the bottom of the column */
     padding: 3rem 2.5rem;
     display: flex;
     flex-direction: column;
@@ -648,13 +658,15 @@
     gap: 1.5rem;
   }
   .contact-link-row {
+   /* Each contact method (email, GitHub, etc.) as a label/value pair */
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Label left-aligned, value right-aligned */
     align-items: center;
-    border-top: 0.5px solid var(--rule);
+    border-top: 0.5px solid var(--rule); /* Rule above each row */
     padding-top: 1rem;
   }
   .contact-link-label {
+   /* Left side: "Email", "GitHub", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
@@ -662,16 +674,23 @@
     color: var(--mid);
   }
   .contact-link-val {
+   /* Right side: the actual link text */
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     color: var(--ink);
-    border-bottom: 0.5px solid transparent;
+    border-bottom: 0.5px solid transparent; /* Invisible border held in reserve —
+                                                keeps layout stable when border appears on hover */
     transition: border-color 0.15s;
   }
-  .contact-link-val:hover { border-color: var(--ink); }
+  .contact-link-val:hover { border-color: var(--ink); }  /* On hover, the transparent border becomes visible — a subtle underline reveals itself */
 
-  /* FOOTER */
+ /* ============================================================
+   FOOTER
+   Minimal two-item row with the same hairline border treatment
+   used throughout.
+   ============================================================ */
+ 
   footer {
     padding: 1.2rem 2.5rem;
     border-top: 0.5px solid var(--rule);
@@ -687,42 +706,74 @@
     color: var(--mid);
   }
 
-  /* ANIMATIONS */
+/* ============================================================
+   ANIMATIONS
+   Entry animations for the hero section. Elements start
+   invisible and shifted down, then fade up into position.
+   ============================================================ */
+ 
   @keyframes fade-up {
+   /* @keyframes defines a named animation sequence.
+       "from" and "to" are shorthand for 0% and 100% */
     from { opacity: 0; transform: translateY(20px); }
+   /* Starts: invisible, shifted 20px downward */
     to   { opacity: 1; transform: translateY(0); }
+   /* Ends: fully visible, in natural position */
   }
   .fade-in {
     animation: fade-up 0.6s ease forwards;
+       /* animation: [name] [duration] [easing] [fill-mode]
+       forwards — keeps the final keyframe state after the animation completes.
+       Without this, the element would snap back to its "from" state */
   }
+ 
+   /* Staggered delay classes — each delays the same fade-up animation by a slightly
+     longer time, creating a cascading entrance effect where elements appear
+     one after another rather than all at once */
   .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
   .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
   .fade-in-delay-3 { animation-delay: 0.35s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
 
   @media (prefers-reduced-motion: reduce) {
+       /* Accessibility media query. Some users have vestibular disorders or motion sensitivity —
+       the OS-level "Reduce Motion" setting triggers this query.
+       We disable all animations and make elements immediately visible */
     .fade-in, .fade-in-delay-1, .fade-in-delay-2, .fade-in-delay-3 {
       animation: none; opacity: 1;
     }
   }
 
+/* ============================================================
+   RESPONSIVE BREAKPOINT — Mobile (max-width: 768px)
+   @media queries apply styles only when the condition is met.
+   max-width: 768px targets screens 768px wide or narrower
+   (tablets in portrait, all phones).
+   ============================================================ */
+ 
   @media (max-width: 768px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero-right { display: none; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .project-card:nth-child(even) { border-right: 0.5px solid var(--rule); }
-    .project-card.featured { grid-template-columns: 1fr; }
-    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .hero { grid-template-columns: 1fr; } /* Collapses the two-column hero to a single column */
+    .hero-right { display: none; } /* Hides the stats/vertical-type panel entirely on mobile — too dense for small screens */
+    .projects-grid { grid-template-columns: 1fr; } /* Single-column project cards on mobile */
+    .project-card:nth-child(even) { border-right: 0.5px solid var(--rule); }     /* Restores the right border that was removed for the desktop right-column cards —
+                                                                                  in single-column mobile layout, all cards need a right border */
+    .project-card.featured { grid-template-columns: 1fr; } /* Featured card's internal two columns collapse to one — visual panel stacks above content */
+    .skills-grid { grid-template-columns: 1fr 1fr; } /* Four skill columns narrow to two on mobile */
     .about-section { grid-template-columns: 1fr; }
-    .about-left { border-right: none; border-bottom: 0.5px solid var(--rule); }
+    .about-left { border-right: none; border-bottom: 0.5px solid var(--rule); } /* About section stacks vertically; vertical divider becomes horizontal */
     .contact-section { grid-template-columns: 1fr; }
-    .contact-left { border-right: none; border-bottom: 0.5px solid var(--rule); }
+    .contact-left { border-right: none; border-bottom: 0.5px solid var(--rule); } /* Contact section stacks; same divider swap */
     nav { padding: 1rem 1.5rem; }
-    .nav-links { gap: 1.2rem; }
+    .nav-links { gap: 1.2rem; } /* Tighter nav padding and link spacing on narrow screens */
   }
 </style>
 </head>
 <body>
 
+ <!-- ============================================================
+     NAVIGATION
+     Fixed bar. <nav> is a semantic HTML5 landmark element —
+     screen readers use it to identify navigation regions.
+     ============================================================ -->
 <!-- ── HERO BACKGROUND COMPOSITING LAYERS ── -->
 <!-- Fixed behind everything; JS hides these once user scrolls past the hero -->
 <div class="hero-bg-layer" id="heroBgLayer">
