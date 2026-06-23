@@ -1,21 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<!-- DOCTYPE tells the browser this is an HTML5 document — always the first line -->
 
+<html lang="en">
+ <!-- <html> is the root element wrapping the entire page. lang="en" declares the language
+     for screen readers and search engines -->
+ 
+<head>
+ <!-- <head> contains metadata and resources that load before the page renders —
+     nothing inside here is visible to the user directly -->
+ 
+<meta charset="UTF-8">
+   <!-- Declares character encoding. UTF-8 supports all unicode characters (emojis,
+       accented letters, special symbols). Without this, non-ASCII characters may
+       display as garbled text -->
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- Critical for mobile responsiveness. Tells the browser:
+       width=device-width — match the viewport to the device's actual screen width
+       initial-scale=1.0 — don't zoom in or out on load
+       Without this, mobile browsers default to rendering at desktop width and zooming out -->
+ 
+<title>Portfolio</title>
+   <!-- Text shown in the browser tab and used by search engines as the page title -->
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+   <!-- Loads two typefaces from Google Fonts over the network:
+       Space Grotesk — the display/body font, loaded in weights 300, 400, 500, 700
+       Space Mono — the monospace font used for labels/nav, loaded in 400 and 700
+       display=swap — tells the browser to show fallback text immediately, then swap in
+       the custom font once it loads (prevents invisible text during load) -->
+ 
+<style>
+ /* ============================================================
+   RESET & ROOT
+   A reset strips browser default styles so we start from a
+   consistent baseline across all browsers.
+   ============================================================ */
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Universal reset applied to every element and its ::before / ::after pseudo-elements:
+     box-sizing: border-box — padding and border are included inside the declared width/height,
+       not added on top. Makes layout math far more predictable.
+     margin: 0; padding: 0 — removes all default browser spacing (e.g. <h1> top margin,
+       <ul> left padding) so we control all spacing explicitly */
+ 
   :root {
-    --ink: #0a0a0a;
-    --paper: #f5f3ef;
-    --mid: #8a8a8a;
-    --rule: #d0cdc9;
-    --accent: #0a0a0a;
-    --serif-disp: 'Space Grotesk', sans-serif;
-    --mono: 'Space Mono', monospace;
+       /* :root targets the <html> element — the highest scope for CSS custom properties
+       (also called CSS variables). Variables defined here are available everywhere on the page.
+       Using variables means one change here propagates everywhere they're used. */
+   
+    --ink: #0a0a0a;                             /* Near-black for text and primary surfaces */
+    --paper: #f5f3ef;                           /* Warm off-white page background — avoids harsh pure white */
+    --mid: #8a8a8a;                             /* Medium gray for secondary/muted text */
+    --rule: #d0cdc9;                            /* Light warm gray for border lines (the "rules" in print design) */
+    --accent: #0a0a0a;                          /* Accent color — same as ink here, kept separate for easy retheming */
+    --serif-disp: 'Space Grotesk', sans-serif;  /* Primary typeface variable */
+    --mono: 'Space Mono', monospace;            /* Monospace typeface variable */
 
     /* Hero dark-mode tokens — mirrors modeling site palette for the photo hero */
     --chalk:       #f0ede8;
@@ -25,28 +65,46 @@
   }
 
   html { scroll-behavior: smooth; }
+   /* Makes anchor-link navigation (e.g. clicking <a href="#projects">) animate
+     smoothly instead of jumping instantly to the target section */
 
   body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--serif-disp);
-    font-size: 15px;
-    line-height: 1.6;
-    overflow-x: hidden;
+    background: var(--paper);         /* Sets the page background to our warm off-white */
+    color: var(--ink);                /* Default text color for all elements */
+    font-family: var(--serif-disp);   /* Default typeface — all elements inherit this unless overridden */
+    font-size: 15px;                  /* Base font size — rem units throughout the file are relative to this */
+    line-height: 1.6;                 /* 1.6× the font size between lines — improves readability */
+    overflow-x: hidden;                /* Prevents horizontal scrollbar if any element accidentally overflows
+                                       the viewport width (common with large decorative type) */
   }
 
   /* NAV — transparent over hero, becomes solid on scroll */
+
+ /* ============================================================
+   NAVIGATION
+   Fixed bar that stays at the top of the viewport as you scroll
+   ============================================================ */
   nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 200;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 2.5rem;
-    border-bottom: 0.5px solid transparent;
-    background: transparent;
-    transition: background 0.4s ease, border-color 0.4s ease;
+    position: fixed;                                           /* Removes the nav from normal document flow and pins it to the viewport —
+                              it stays visible regardless of scroll position */
+    top: 0; left: 0; right: 0;                                  /* Stretches the nav edge-to-edge across the top */
+    z-index: 200;                                               /* Stacking order — higher values render on top. 100 ensures the nav
+                              sits above all page content which has default z-index of 0 */
+    display: flex;                                              /* Flexbox layout — children (logo and links) sit side by side */
+    justify-content: space-between;                             /* The CSS justify-content property aligns and distributes space between items along the main axis of a flex or grid container. 
+                                    It only works when applied to a parent element that has display: flex or display: grid enabled
+                                    flex-start (Default): Packs items tightly against the start of the container.
+                                    flex-end: Packs items tightly against the end of the container.
+                                    center: Groups all items tightly together in the exact middle.
+                                    space-between: Spreads items evenly, forcing the first and last items flush against the outer edges.
+                                    space-around: Spreads items evenly, leaving a half-size space on both outer edges.
+                                    space-evenly: Spreads items evenly, keeping identical full-size spaces between every item and the edges.
+                                    Pushes logo to far left, links to far right */
+    align-items: center;                                        /* Vertically centers logo and links within the nav bar */
+    padding: 1.2rem 2.5rem;                                     /* 1.2rem top/bottom, 2.5rem left/right breathing room */
+    border-bottom: 0.5px solid transparent;                     /* Hairline separator between nav and page content */
+    background: transparent;                                   
+    transition: background 0.4s ease, border-color 0.4s ease;   
   }
   /* JS adds this class once user scrolls past the hero */
   nav.scrolled {
@@ -54,34 +112,40 @@
     border-bottom-color: var(--rule);
   }
   .nav-logo {
-    font-family: var(--mono);
+    font-family: var(--mono);    /* Using the variable "mono" we created earlier to apply Monospace font for the logo wordmark */
     font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0.12em;      /* Wide tracking — 0.12em = 12% of the font size between each letter */
+    text-transform: uppercase;   /* Forces all characters to uppercase regardless of HTML content */
     color: var(--chalk);
     transition: color 0.4s ease;
   }
   nav.scrolled .nav-logo { color: var(--ink); }
   .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
+    display: flex;    /* Links sit horizontally in a row */
+    gap: 2.5rem;      /* Space between each nav item */
+    list-style: none; /* Removes the default bullet points from the <ul> */
   }
   .nav-links a {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-decoration: none;
+    text-decoration: none;      /* Removes the default underline on anchor tags */
     color: var(--chalk-ghost);
-    transition: color 0.15s;
+    transition: color 0.15s;    /* Animates the color property over 0.15 seconds on state change */
   }
   nav.scrolled .nav-links a { color: var(--mid); }
-  .nav-links a:hover { color: var(--chalk) !important; }
+  .nav-links a:hover { color: var(--chalk) !important; }   /* :hover is a pseudo-class that applies styles when the cursor is over the element.
+                                                           On hover, link text shifts from muted gray to full ink black */
   nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
 
-  /* ── HERO BACKGROUND COMPOSITING LAYERS (mirrors modeling site) ── */
-
+/* ============================================================
+   HERO BACKGROUND COMPOSITING LAYERS
+   Full-viewport landing area split into two equal columns.
+   Inspired by the Balenciaga campaign: large structural type,
+   white space as a compositional element, stark contrast.
+   ============================================================ */
+ 
   /* Fixed canvas that sits behind the hero content */
   .hero-bg-layer {
     position: fixed;
@@ -127,25 +191,31 @@
 
   /* ── HERO SECTION ── */
   .hero {
-    padding-top: 80px;
-    min-height: 100vh;
+    padding-top: 80px; /* Offsets the fixed nav so content doesn't hide behind it.
+                             80px ≈ the nav's height */
+    min-height: 100vh; /* vh = viewport height units. 100vh = the full visible screen height.
+                             min-height allows it to grow taller if content needs it */
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    position: relative;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns. 1fr = one fraction of available space */
+    position: relative; /* Establishes a positioning context for absolutely-positioned children
+                             (the vertical "DEV" type) */
     z-index: 10; /* Sits above the fixed bg layers */
-    border-bottom: 0.5px solid var(--border-mid);
-    overflow: hidden;
+    border-bottom: 0.5px solid var(--border-mid); /* Hairline rule separating hero from next section */ 
+    overflow: hidden; /* Clips any decorative type that extends beyond the section boundary */
   }
 
   /* Left column — chalk text on dark background */
   .hero-left {
     padding: 3rem 2.5rem 3rem;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border-right: 0.5px solid var(--border-mid);
+    flex-direction: column; /* Stacks children vertically */
+    justify-content: flex-end; /* Pushes all content to the bottom of the column —
+                                  name and description sit near the bottom edge */
+    border-right: 0.5px solid var(--border-mid); /* Column divider line between left and right */
   }
   .hero-eyebrow {
+   /* Small label above the name — called an "eyebrow" in editorial design */
+   
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.14em;
@@ -154,47 +224,68 @@
     margin-bottom: 1.5rem;
   }
   .hero-name {
+   /* clamp(min, preferred, max) — responsive font sizing without media queries:
+       - Never smaller than 3.5rem
+       - Ideally 7vw (7% of viewport width) — scales with screen size
+       - Never larger than 6rem
+       This is the key technique for display type that adapts fluidly */
+   
     font-size: clamp(3.5rem, 7vw, 6rem);
     font-weight: 700;
-    line-height: 0.92;
-    letter-spacing: -0.03em;
+    line-height: 0.92; /* Tighter than 1 — pulls lines of the name closer together.
+                               Intentional in display type; would be unreadable at body sizes */
+    letter-spacing: -0.03em; /* Negative tracking — tightens letter spacing on large type.
+                                Large fonts look better with letters pulled slightly closer */
     margin-bottom: 2rem;
     color: var(--chalk);
   }
   .hero-desc {
     font-size: 14px;
     color: var(--chalk-ghost);
-    max-width: 28ch;
+    max-width: 28ch; /* ch units = width of the "0" character. 28ch ≈ 28 characters per line.
+                         Constrains line length for comfortable reading (optimal is ~60ch for body,
+                         shorter for display captions) */
     line-height: 1.7;
-    border-top: 0.5px solid var(--border-mid);
+    border-top: 0.5px solid var(--border-mid); /* Visual separator above the description paragraph */
     padding-top: 1.5rem;
   }
   .hero-right {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
     padding: 3rem 2.5rem;
-    position: relative;
+    position: relative; /* Positioning context for the absolutely-placed vertical "DEV" type */
   }
   .hero-vertical-type {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-size: clamp(5rem, 12vw, 10rem);
+   /* The large outlined "DEV" text rotated to read top-to-bottom.
+       Borrowed directly from the Balenciaga vertical brand treatment */
+   
+    writing-mode: vertical-rl; /* Rotates text direction — rl = right-to-left flow,
+                                     which combined with the default stacking order makes text
+                                     read top-to-bottom */
+    text-orientation: mixed; /* Keeps latin characters upright within the vertical flow */
+    font-size: clamp(5rem, 12vw, 10rem); /* Fluid sizing — scales with viewport width */
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 0.88;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(240,237,232,0.25);
-    pointer-events: none;
-    position: absolute;
+    color: transparent; /* Makes the fill invisible — only the stroke shows */
+    -webkit-text-stroke: 1.5px rgba(240,237,232,0.25); /* Draws an outline around each letter instead of filling it.
+                                               -webkit- prefix required for broad browser support.
+                                               Creates the "ghost type" editorial effect */
+    pointer-events: none; /* Makes the element unclickable and unselectable — it's purely decorative */
+    position: absolute; /* Removes from normal flow, positioned relative to .hero-right */
     right: 2rem;
     top: 50%;
-    transform: translateY(-50%);
-    user-select: none;
+    transform: translateY(-50%); /* Shifts the element up by half its own height — perfectly centers it */
+    user-select: none; /* Prevents the text from being highlighted/selected by the user */
   }
-  .hero-stats { display: flex; flex-direction: column; gap: 1.5rem; }
+  .hero-stats { 
+   display: flex;
+   flex-direction: column; 
+   gap: 1.5rem; /* Space between each stat item */
+  }
   .hero-stat {
-    border-top: 0.5px solid var(--border-mid);
+    border-top: 0.5px solid var(--border-mid); /* Each stat separated by a thin horizontal rule */
     padding-top: 1rem;
   }
   .hero-stat-num {
@@ -210,13 +301,19 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--chalk-ghost);
-    margin-top: 4px;
+    margin-top: 4px; /* Small gap between number and label */
   }
-  .hero-cta-row { display: flex; gap: 1rem; align-items: center; }
+  .hero-cta-row { 
+   /* Wrapper for the two call-to-action buttons */
+   display: flex; 
+   gap: 1rem; align-items: center; 
+  }
 
   /* Buttons — chalk on dark for hero context */
+ 
   .btn-primary {
-    display: inline-block;
+   /* Solid filled button — inverted colors (ink background, paper text) */
+    display: inline-block; /* Allows padding/width to work on an anchor tag */
     background: var(--chalk);
     color: var(--ink);
     font-family: var(--mono);
@@ -225,7 +322,7 @@
     text-transform: uppercase;
     padding: 0.85rem 2rem;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth fade on hover */
   }
   .btn-primary:hover {
     background: transparent;
@@ -233,23 +330,32 @@
     outline: 0.5px solid var(--chalk);
   }
   .btn-ghost {
+   /* Underline-only button — no background fill, text with bottom border */
     display: inline-block;
     color: var(--chalk);
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 0.85rem 0;
+    padding: 0.85rem 0; /* Padding top/bottom but not sides — border-bottom aligns to text */
     text-decoration: none;
     border-bottom: 0.5px solid var(--chalk-ghost);
     transition: color 0.15s, border-color 0.15s;
   }
   .btn-ghost:hover { border-color: var(--chalk); }
 
-  /* SECTION HEADER — Mingyu magazine banner style */
+ /* ============================================================
+   SECTION BANNER — Mingyu magazine banner style 
+  
+   The title row at the top of each section — large flush-left
+   heading with small right-aligned metadata. Directly mirrors
+   the Mingyu magazine banner treatment.
+   ============================================================ */
+
   .section-banner {
     display: flex;
-    align-items: baseline;
+    align-items: baseline; /* Aligns the large title and small meta text along their text baselines —
+                               more visually precise than center alignment for mixed font sizes */
     justify-content: space-between;
     padding: 1.5rem 2.5rem;
     border-bottom: 0.5px solid var(--rule);
@@ -261,6 +367,7 @@
     line-height: 1;
   }
   .section-banner-meta {
+   /* Small right-aligned label group (e.g. "2023 — 2026 / 6 projects") */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -269,26 +376,35 @@
     text-align: right;
   }
 
-  /* PROJECTS — editorial grid, Marni spread columns */
+/* ============================================================
+   PROJECTS GRID
+   Two-column editorial grid. Each card is a full anchor tag
+   so the entire card is clickable. Inspired by the Marni
+   editorial spread's multi-column layout.
+   ============================================================ */
+ 
   .projects-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
   }
   .project-card {
     border-right: 0.5px solid var(--rule);
-    border-bottom: 0.5px solid var(--rule);
+    border-bottom: 0.5px solid var(--rule); /* Cards separated by hairline rules, not gaps */
     padding: 2.5rem;
-    text-decoration: none;
-    color: inherit;
-    display: block;
+    text-decoration: none; /* Removes default underline on the <a> tag wrapping each card */
+    color: inherit; /* Inherits text color from parent instead of showing default link blue */
+    display: block; /* <a> is inline by default; block makes it fill its grid cell */
     transition: background 0.2s;
-    position: relative;
+    position: relative; /* Positioning context for the absolute-placed arrow icon */
     overflow: hidden;
   }
-  .project-card:nth-child(even) { border-right: none; }
-  .project-card:hover { background: rgba(10,10,10,0.03); }
-  .project-card:hover .project-arrow { transform: translate(4px, -4px); }
+  .project-card:nth-child(even) { border-right: none; }  /* :nth-child(even) targets every 2nd card (the right column).
+                                                         Removes its right border so we don't double up borders at the grid edge */
+  .project-card:hover { background: rgba(10,10,10,0.03); }  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity */
+  .project-card:hover .project-arrow { transform: translate(4px, -4px); }  /* On card hover, the arrow moves 4px right and 4px up — a micro-interaction
+                                                                           that suggests "go to this link" without being loud */
   .project-index {
+   /* Small numbered label at top of card, e.g. "02" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
@@ -303,12 +419,14 @@
     margin-bottom: 1rem;
   }
   .project-tags {
+   /* Flex container for the technology pill tags */
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Tags wrap to a new line if they exceed container width */
     gap: 6px;
     margin-bottom: 1.5rem;
   }
   .tag {
+   /* Individual technology tags — borderless pill badges */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
@@ -324,23 +442,32 @@
     max-width: 38ch;
   }
   .project-arrow {
-    position: absolute;
+   /* Diagonal arrow icon anchored to the bottom-right of each card */
+    position: absolute; /* Positioned relative to the card's position: relative */
     bottom: 2.5rem;
     right: 2.5rem;
     font-size: 1.2rem;
-    transition: transform 0.2s;
+    transition: transform 0.2s; /* Smooth movement on hover (triggered by card:hover rule above) */
   }
 
-  /* FEATURED PROJECT — full-width Marni editorial */
+ /* ============================================================
+   FEATURED PROJECT CARD — full-width Marni editorial
+   The first/hero project card spans the full grid width —
+   like a double-page spread in the Marni editorial. It has
+   its own internal two-column layout: black visual panel
+   on the left, content on the right.
+   ============================================================ */
+ 
   .project-card.featured {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1; /* Spans from column line 1 to -1 (the last line) — full width */
     border-right: none;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* Internal two-column split */
     gap: 0;
-    padding: 0;
+    padding: 0; /* Padding is handled by each internal child instead */
   }
   .featured-visual {
+    /* The black visual panel on the left side of the featured card */
     background: var(--ink);
     min-height: 360px;
     display: flex;
@@ -350,6 +477,7 @@
     overflow: hidden;
   }
   .featured-visual-type {
+   /* The large ghost display type inside the black panel ("DATA LAKE") */
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 700;
     color: transparent;
@@ -360,36 +488,45 @@
     padding: 2rem;
   }
   .featured-visual-badge {
+    /* "Featured — 2026" label pinned to the top-left of the black panel */
     position: absolute;
     top: 2rem; left: 2rem;
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(245,243,239,0.5);
+    color: rgba(245,243,239,0.5); /* Semi-transparent paper color on dark background */
   }
   .featured-content {
+    /* Right panel of the featured card — project info */
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; /* Title group at top, description at bottom */
     border-left: 0.5px solid var(--rule);
   }
 
-  /* SKILLS — dense editorial columns */
+ /* ============================================================
+   SKILLS SECTION — dense editorial columns
+   Four equal columns — one per skill category. Dense editorial
+   typographic columns like a magazine's credits page.
+   ============================================================ */
+ 
   .skills-section {
     border-bottom: 0.5px solid var(--rule);
   }
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns. Equivalent to writing 1fr 1fr 1fr 1fr */
   }
   .skill-col {
     padding: 2.5rem;
-    border-right: 0.5px solid var(--rule);
+    border-right: 0.5px solid var(--rule); /* Vertical rule between columns */
   }
-  .skill-col:last-child { border-right: none; }
+  .skill-col:last-child { border-right: none; } /* :last-child removes the border from the final column so there's no line at the right edge */
+ 
   .skill-col-title {
+    /* Category heading inside each skill column, e.g. "Languages" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
@@ -397,10 +534,10 @@
     color: var(--mid);
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 0.5px solid var(--rule);
+    border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating heading from list */
   }
   .skill-list {
-    list-style: none;
+    list-style: none; /* Removes default bullet points */
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
@@ -411,10 +548,17 @@
     line-height: 1.3;
   }
 
-  /* ABOUT — asymmetric two-column Marni spread */
+ /* ============================================================
+   ABOUT SECTION — asymmetric two-column Marni spread 
+   Asymmetric 2:3 column split — narrower left column holds
+   the large display heading and location, wider right column
+   holds the body paragraph and timeline. Mirrors the Marni
+   spread's unequal column structure.
+   ============================================================ */
+ 
   .about-section {
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 2fr 3fr; /* Left column is 2 parts, right is 3 parts of available width */
     border-bottom: 0.5px solid var(--rule);
   }
   .about-left {
@@ -422,18 +566,19 @@
     border-right: 0.5px solid var(--rule);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; /* "About me." at top, location info pinned to bottom */
   }
   .about-big-text {
+   /* The large "About me." display heading */
     font-size: clamp(3rem, 7vw, 5.5rem);
     font-weight: 700;
     letter-spacing: -0.04em;
-    line-height: 0.9;
+    line-height: 0.9; /* Tightly stacked — "About" and "me." overlap vertically */
   }
   .about-right {
     padding: 3rem 2.5rem;
     display: grid;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto; /* Two rows: body paragraph, then timeline */
     gap: 2rem;
   }
   .about-body {
