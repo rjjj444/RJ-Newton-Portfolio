@@ -50,7 +50,7 @@
        Using variables means one change here propagates everywhere they're used. */
 
     --ink: #0a0a0a;                             /* Near-black for text and primary surfaces */
-    --paper: #F9F9F9;                           /* Warm off-white page background — avoids harsh pure white */
+    --paper: #f5f3ef;                           /* Warm off-white page background — avoids harsh pure white */
     --mid: #8a8a8a;                             /* Medium gray for secondary/muted text */
     --rule: #d0cdc9;                            /* Light warm gray for border lines (the "rules" in print design) */
     --accent: #0a0a0a;                          /* Accent color — same as ink here, kept separate for easy retheming */
@@ -80,7 +80,7 @@
                                          the viewport width (common with large decorative type) */
   }
 
-/* ============================================================
+  /* ============================================================
      NAVIGATION
      Fixed bar that stays at the top of the viewport as you scroll.
      Starts solid (paper background) immediately since the hero
@@ -109,46 +109,33 @@
     background: var(--paper);              /* UPDATED: solid paper background from the start —
                                                hero is now light so no transparent phase needed */
     transition: background 0.4s ease, border-color 0.4s ease;
-    /* transition animates the background and border-color properties whenever they change.
-       0.4s is the duration, ease is the timing curve (fast start, slow end).
-       This was originally used for the transparent-to-solid scroll transition —
-       kept in place in case the nav styling diverges later. */
   }
 
   /* JS adds this class once user scrolls past the hero — kept for compatibility
      but visually identical to the base state since both use --paper */
   nav.scrolled {
-    /* .scrolled is toggled by JavaScript when the user scrolls past the hero.
-       Currently identical to the base nav state — both use --paper background.
-       Kept here so future style changes (e.g. adding a shadow on scroll) can
-       be applied without restructuring the JavaScript logic. */
     background: var(--paper);
     border-bottom-color: var(--rule);
   }
 
   .nav-logo {
-    /* Controls the "RJ Newton — Dev" wordmark on the left side of the nav bar */
     font-family: var(--mono);    /* Using the variable "mono" we created earlier to apply Monospace font for the logo wordmark */
     font-size: 12px;
     letter-spacing: 0.12em;      /* Wide tracking — 0.12em = 12% of the font size between each letter */
     text-transform: uppercase;   /* Forces all characters to uppercase regardless of HTML content */
     color: var(--ink);           /* UPDATED: ink black — readable on the light paper background */
-    transition: color 0.4s ease; /* Smooth color change if the nav state changes */
+    transition: color 0.4s ease;
   }
 
   nav.scrolled .nav-logo { color: var(--ink); }
-  /* Descendant selector: targets .nav-logo only when it's inside nav.scrolled.
-     Currently the same color as the base state — kept for future flexibility. */
 
   .nav-links {
-    /* The <ul> containing the four navigation anchor links (Work, Skills, About, Contact) */
     display: flex;    /* Links sit horizontally in a row */
     gap: 2.5rem;      /* Space between each nav item */
     list-style: none; /* Removes the default bullet points from the <ul> */
   }
 
   .nav-links a {
-    /* Styles every anchor tag inside the nav links list */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -159,8 +146,6 @@
   }
 
   nav.scrolled .nav-links a { color: var(--mid); }
-  /* Keeps nav link color as muted gray in the scrolled state —
-     same as the base state, kept for future divergence. */
 
   .nav-links a:hover { color: var(--ink) !important; }
   /* :hover is a pseudo-class that applies styles when the cursor is over the element.
@@ -168,8 +153,6 @@
      !important ensures this wins over any other color rules. */
 
   nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
-  /* Ensures hover still shows full ink black in the scrolled state.
-     !important overrides any conflicting color rules from the scrolled state. */
 
 
   /* ============================================================
@@ -184,16 +167,13 @@
     /* Container div for the portrait <img>.
        position: absolute fills the hero section (which is position: relative).
        Flexbox pins the image to the bottom so feet-to-head is always visible. */
-    position: absolute; /* Removes from normal document flow and anchors to the nearest
-                           position: relative parent — which is .hero */
-    inset: 0;           /* Shorthand for top: 0; right: 0; bottom: 0; left: 0 —
-                           stretches the container to fill the entire hero section */
+    position: absolute;
+    inset: 0;                  /* Fills the entire hero section */
     display: flex;
-    align-items: flex-end;     /* Pins the <img> to the bottom edge of the hero —
-                                  ensures feet are always visible at the bottom */
-    justify-content: center;   /* Horizontally centers the figure within the hero */
+    align-items: flex-end;     /* Pins the <img> to the bottom edge of the hero */
+    justify-content: center;   /* Horizontally centers the figure */
     pointer-events: none;      /* Decorative — clicks pass through to content above */
-    z-index: 0;                /* Behind hero text content (hero-left/right sit above at z-index: 2) */
+    z-index: 0;                /* Behind hero text content (hero-left/right sit above) */
   }
 
   .hero-bg-image img {
@@ -201,12 +181,11 @@
        height: 90vh scales the figure to 90% of the viewport height —
        increase to show more of the figure, decrease to show less.
        width: auto maintains the natural aspect ratio with no distortion. */
-    height: 90vh;        /* vh = viewport height units. 90vh = 90% of the visible screen height.
-                            Adjust this value to show more or less of the figure. */
-    width: auto;         /* Maintains the image's natural aspect ratio — no stretching or squishing */
-    object-fit: contain; /* Ensures the full figure fits without any cropping */
-    opacity: 0;          /* Starts completely invisible — prevents flash of unloaded image */
-    transition: opacity 2s ease; /* 2-second fade-in triggered when .loaded class is added by JS */
+    height: 90vh;
+    width: auto;
+    object-fit: contain;       /* No cropping — the full figure is always visible */
+    opacity: 0;                /* Starts invisible — fades in once the image has loaded */
+    transition: opacity 2s ease; /* 2-second fade-in triggered when .loaded is added by JS */
   }
 
   .hero-bg-image.loaded img { opacity: 1; }
@@ -223,8 +202,6 @@
      ============================================================ */
 
   .hero {
-    /* The main landing section of the page — contains the portrait photo,
-       name, description, CTA buttons on the left, and stats on the right */
     padding-top: 80px;              /* Offsets the fixed nav so content doesn't hide behind it.
                                        80px ≈ the nav's height */
     min-height: 100vh;              /* vh = viewport height units. 100vh = the full visible screen height.
@@ -240,9 +217,8 @@
     background: var(--paper);       /* Explicit paper background — ensures image's white bg blends in */
   }
 
+  /* Left column — ink text on light paper background */
   .hero-left {
-    /* The left two-thirds of the hero — contains eyebrow label, name, description, and buttons.
-       Left column — ink text on light paper background */
     padding: 3rem 2.5rem 3rem;
     display: flex;
     flex-direction: column; /* Stacks children vertically */
@@ -253,19 +229,17 @@
   }
 
   .hero-eyebrow {
-    /* The small "SOFTWARE DEV / DATA SCIENTIST / WEB DEV" label above the name.
-       Called an "eyebrow" in editorial design — a short descriptor above a headline. */
+    /* Small label above the name — called an "eyebrow" in editorial design */
     font-family: var(--mono);
     font-size: 11px;
-    letter-spacing: 0.14em; /* Wider tracking than most elements — helps legibility at small sizes */
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--mid);       /* UPDATED: muted gray — readable on light background */
     margin-bottom: 1.5rem;
   }
 
   .hero-name {
-    /* The large "RJ Newton." display heading — the most prominent text on the page.
-       clamp(min, preferred, max) — responsive font sizing without media queries:
+    /* clamp(min, preferred, max) — responsive font sizing without media queries:
        - Never smaller than 3.5rem
        - Ideally 7vw (7% of viewport width) — scales with screen size
        - Never larger than 6rem
@@ -281,8 +255,6 @@
   }
 
   .hero-desc {
-    /* The paragraph of body copy beneath the name:
-       "Full-stack developer and data scientist. I build systems..." */
     font-size: 14px;
     color: var(--mid);        /* UPDATED: muted gray for secondary copy on light background */
     max-width: 28ch;          /* ch units = width of the "0" character. 28ch ≈ 28 characters per line.
@@ -294,8 +266,6 @@
   }
 
   .hero-right {
-    /* The right one-third of the hero — contains the 4+/7/2 stat blocks
-       and the decorative vertical "DEV" ghost type */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
@@ -307,9 +277,8 @@
   }
 
   .hero-vertical-type {
-    /* The large decorative "DEV" text rotated 90° on the right side of the hero.
-       Borrowed directly from the Balenciaga vertical brand treatment —
-       purely decorative, not readable in the traditional sense */
+    /* The large outlined "DEV" text rotated to read top-to-bottom.
+       Borrowed directly from the Balenciaga vertical brand treatment */
     writing-mode: vertical-rl;  /* Rotates text direction — rl = right-to-left flow,
                                     which combined with the default stacking order makes text
                                     read top-to-bottom */
@@ -320,33 +289,30 @@
     line-height: 0.88;
     color: transparent;         /* Makes the fill invisible — only the stroke shows */
     -webkit-text-stroke: 1.5px rgba(10,10,10,0.12);
-    /* Draws a faint ink outline around each letter at 12% opacity.
+    /* UPDATED: dark ink outline at low opacity — visible on light background.
        -webkit- prefix required for broad browser support.
-       Creates the "ghost type" editorial effect visible on the right side of the hero */
+       Creates the "ghost type" editorial effect */
     pointer-events: none;       /* Makes the element unclickable and unselectable — it's purely decorative */
     position: absolute;         /* Removes from normal flow, positioned relative to .hero-right */
     right: 2rem;
-    top: 60%;
+    top: 50%;
     transform: translateY(-50%); /* Shifts the element up by half its own height — perfectly centers it */
     user-select: none;           /* Prevents the text from being highlighted/selected by the user */
   }
 
   .hero-stats {
-    /* Wrapper for the three stat blocks (4+ Years, 7 Languages, 2 Research Domains) */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;       /* Space between each stat item */
-    margin-left: auto; /* Pushes the entire stats block to the right side of the column */
+    gap: 1.5rem;     /* Space between each stat item */
+    margin-left: auto; /* Pushes the stats block to the right side of the column */
   }
 
   .hero-stat {
-    /* Individual stat block — e.g. "4+" on top and "YEARS EXPERIENCE" below */
-    border-top: 0.5px solid var(--rule); /* Thin horizontal rule above each stat */
+    border-top: 0.5px solid var(--rule); /* UPDATED: --rule — visible on light background */
     padding-top: 1rem;
   }
 
   .hero-stat-num {
-    /* The large number in each stat: "4+", "7", "2" */
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -355,7 +321,6 @@
   }
 
   .hero-stat-label {
-    /* The small label beneath each number: "YEARS EXPERIENCE", "LANGUAGES", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
@@ -365,8 +330,7 @@
   }
 
   .hero-cta-row {
-    /* Wrapper div for the two CTA buttons: "VIEW WORK" and "GET IN TOUCH ↗"
-       Sits at the bottom of the hero-left column */
+    /* Wrapper for the two call-to-action buttons */
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -374,66 +338,30 @@
 
   /* ── BUTTONS ── */
 
-.btn-primary {
-    display: inline-block;
-    background: var(--ink);
-    color: var(--paper);
+  .btn-primary {
+    /* Solid filled button — ink background, paper text */
+    display: inline-block; /* Allows padding/width to work on an anchor tag */
+    background: var(--ink);   /* UPDATED: ink fill on light background */
+    color: var(--paper);      /* UPDATED: paper text on ink button */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.85rem 2rem;
     text-decoration: none;
-    position: relative;   /* needed so the .slide pseudo-element positions inside it */
-    overflow: hidden;     /* clips the sliding panel so it doesn't show outside the button */
-    transition: color 0.2s;
-}
- .btn-primary::before {
-    /* The sliding white panel — starts off-screen to the left,
-       slides in on hover using the skewed shape from the CodePen */
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -110%;             /* starts fully off-screen to the left */
-    width: 100%;
-    height: 100%;
-    background: var(--paper);
-    transform: skewX(20deg); /* the diagonal skew from the CodePen effect */
-    transition: left 0.2s ease;
-    z-index: 0;              /* behind the text */
-}
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* cubic-bezier(0.16, 1, 0.3, 1) is a custom easing curve —
+       fast acceleration at the start, then slow smooth deceleration */
+  }
 
-.btn-primary:hover::before {
-    left: -10%;              /* slides in to cover most of the button */
-}
-
-.btn-primary:hover {
-    color: var(--ink);       /* text flips to ink as white panel slides in */
-    outline: none;
-}
-
-.btn-primary span {
-    position: relative;
-    z-index: 1;              /* keeps text above the sliding panel */
-}
-
-.btn-arrow {
-    position: relative;
-    z-index: 1;          /* sits above the sliding panel like the text */
-    opacity: 0;          /* invisible at rest */
-    margin-left: 0.5rem;
-    transition: opacity 0.2s, margin-left 0.2s;
-    color: var(--ink);   /* black arrow */
-}
-
-.btn-primary:hover .btn-arrow {
-    opacity: 1;          /* appears on hover */
-    margin-left: 0.75rem; /* slides slightly right on hover */
-}
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--ink);              /* UPDATED: ink text on hover */
+    outline: 0.5px solid var(--ink); /* UPDATED: ink outline on hover */
+  }
 
   .btn-ghost {
-    /* The underline-only button — used for "GET IN TOUCH ↗" and "GITHUB ↗".
-       No background fill, just text with a bottom border underline. */
+    /* Underline-only button — no background fill, text with bottom border */
     display: inline-block;
     color: var(--ink);        /* UPDATED: ink text on light background */
     font-family: var(--mono);
@@ -442,12 +370,11 @@
     text-transform: uppercase;
     padding: 0.85rem 0; /* Padding top/bottom but not sides — border-bottom aligns to text */
     text-decoration: none;
-    border-bottom: 0.5px solid var(--mid); /* Muted gray underline at rest */
-    transition: color 0.15s, border-color 0.15s; /* Both properties animate smoothly on hover */
+    border-bottom: 0.5px solid var(--mid); /* UPDATED: mid gray underline on light background */
+    transition: color 0.15s, border-color 0.15s;
   }
 
-  .btn-ghost:hover { border-color: var(--ink); }
-  /* On hover: underline darkens from muted gray to full ink black */
+  .btn-ghost:hover { border-color: var(--ink); } /* Underline darkens to full ink on hover */
 
 
   /* ============================================================
@@ -456,14 +383,9 @@
      The title row at the top of each section — large flush-left
      heading with small right-aligned metadata. Directly mirrors
      the Mingyu magazine banner treatment.
-     NOTE: This class is kept in the CSS but is no longer used in
-     the HTML — all sections now use .section-heading instead.
-     Kept here in case it's needed for future sections.
      ============================================================ */
 
   .section-banner {
-    /* Legacy banner style — large heading left, small metadata right.
-       Currently unused; replaced by .section-heading across all sections. */
     display: flex;
     align-items: baseline; /* Aligns the large title and small meta text along their text baselines —
                                more visually precise than center alignment for mixed font sizes */
@@ -473,7 +395,6 @@
   }
 
   .section-banner-title {
-    /* Large heading inside the legacy .section-banner — not currently in use */
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -481,30 +402,13 @@
   }
 
   .section-banner-meta {
-    /* Small right-aligned label group inside the legacy .section-banner —
-       not currently in use. Would show things like "2023 — 2026 / 6 projects" */
+    /* Small right-aligned label group (e.g. "2023 — 2026 / 6 projects") */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--mid);
     text-align: right;
-  }
-
-  .section-heading {
-    /* The full-width black banner used at the top of every section below the hero:
-       "Projects:", "Capabilities", "About me.", "Get in touch."
-       This is the consistent structural element that gives the page its rhythm —
-       each section starts with a black band containing centered white text,
-       followed by the section's content on the paper background below. */
-    background: var(--ink);   /* Full black background spanning the entire page width */
-    color: var(--paper);      /* Warm white text — readable on the dark background */
-    padding: 2.5rem;          /* Generous padding so the heading has breathing room */
-    font-size: clamp(2rem, 5vw, 3.5rem); /* Fluid sizing — scales with viewport width */
-    font-weight: 700;
-    letter-spacing: -0.03em;  /* Negative tracking — tightens large display type */
-    line-height: 1;
-    text-align: center;       /* Centers the heading text within the black band */
   }
 
 
@@ -516,50 +420,44 @@
      ============================================================ */
 
   .projects-grid {
-    /* The grid container that holds all six project cards.
-       Sits directly below the "Projects:" section-heading black band. */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns — cards sit side by side in pairs */
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
   }
 
   .project-card {
-    /* Each individual project card — the entire <a> tag is the card,
-       making the full card surface clickable as a link */
     border-right: 0.5px solid var(--rule);
     border-bottom: 0.5px solid var(--rule); /* Cards separated by hairline rules, not gaps */
     padding: 2.5rem;
     text-decoration: none; /* Removes default underline on the <a> tag wrapping each card */
     color: inherit;         /* Inherits text color from parent instead of showing default link blue */
     display: block;         /* <a> is inline by default; block makes it fill its grid cell */
-    transition: background 0.2s; /* Smooth background tint appears on hover */
+    transition: background 0.2s;
     position: relative;     /* Positioning context for the absolute-placed arrow icon */
     overflow: hidden;
   }
 
   .project-card:nth-child(even) { border-right: none; }
-  /* :nth-child(even) targets every 2nd card (the right column cards: 02, 04, 06).
-     Removes their right border so there's no double border at the grid's right edge */
+  /* :nth-child(even) targets every 2nd card (the right column).
+     Removes its right border so we don't double up borders at the grid edge */
 
   .project-card:hover { background: rgba(10,10,10,0.03); }
-  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity.
-     Signals the card is interactive without being visually heavy. */
+  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity */
 
   .project-card:hover .project-arrow { transform: translate(4px, -4px); }
-  /* On card hover, the ↗ arrow inside the card moves 4px right and 4px up —
-     a micro-interaction suggesting "navigate to this link" */
+  /* On card hover, the arrow moves 4px right and 4px up — a micro-interaction
+     that suggests "go to this link" without being loud */
 
   .project-index {
-    /* The small number at the top of each card: "01", "02", "03", etc. */
+    /* Small numbered label at top of card, e.g. "02" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
-    color: var(--mid);    /* Muted gray — supporting context, not primary information */
+    color: var(--mid);
     margin-bottom: 2rem;
   }
 
   .project-title {
-    /* The project name heading inside each card */
-    font-size: clamp(1.4rem, 3vw, 2.2rem); /* Fluid sizing scales with viewport */
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.05;
@@ -567,40 +465,38 @@
   }
 
   .project-tags {
-    /* Flex container that holds the technology pill tags (e.g. "PYTHON", "FLASK") */
+    /* Flex container for the technology pill tags */
     display: flex;
-    flex-wrap: wrap; /* Tags wrap to a new line if they exceed the container width */
+    flex-wrap: wrap; /* Tags wrap to a new line if they exceed container width */
     gap: 6px;
     margin-bottom: 1.5rem;
   }
 
   .tag {
-    /* Individual technology tag pill — e.g. "PYTHON", "UMAP", "R" */
+    /* Individual technology tags — borderless pill badges */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    border: 0.5px solid var(--rule); /* Hairline border creates the pill shape */
+    border: 0.5px solid var(--rule);
     padding: 3px 8px;
-    color: var(--mid); /* Muted gray — supporting info, not primary content */
+    color: var(--mid);
   }
 
   .project-desc {
-    /* The short description paragraph beneath the tags on each card */
     font-size: 13px;
     color: var(--mid);
     line-height: 1.7;
-    max-width: 38ch; /* Constrains to ~38 characters per line for comfortable reading */
+    max-width: 38ch;
   }
 
   .project-arrow {
-    /* The ↗ diagonal arrow icon pinned to the bottom-right corner of each card.
-       Animates on hover via the .project-card:hover rule above. */
+    /* Diagonal arrow icon anchored to the bottom-right of each card */
     position: absolute; /* Positioned relative to the card's position: relative */
     bottom: 2.5rem;
     right: 2.5rem;
     font-size: 1.2rem;
-    transition: transform 0.2s; /* Smooth diagonal movement on hover */
+    transition: transform 0.2s; /* Smooth movement on hover (triggered by card:hover rule above) */
   }
 
 
@@ -610,24 +506,19 @@
      like a double-page spread in the Marni editorial. It has
      its own internal two-column layout: black visual panel
      on the left, content on the right.
-     NOTE: The featured card structure is currently not in use —
-     the projects section now uses all standard cards. These
-     rules are kept in case the featured layout is restored.
      ============================================================ */
 
   .project-card.featured {
-    /* When a project card also has the .featured class, it overrides the
-       standard card layout to span the full grid width as a banner card.
-       Currently not used in the HTML but kept for future use. */
-    grid-column: 1 / -1; /* Spans from grid line 1 to -1 (the last line) = full width */
-    border-right: none;  /* No right border needed on a full-width card */
-    display: block;      /* Single-column block layout — no internal grid split */
-    padding: 0;          /* Child panels handle their own padding */
+    grid-column: 1 / -1; /* Spans from column line 1 to -1 (the last line) — full width */
+    border-right: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Internal two-column split */
+    gap: 0;
+    padding: 0; /* Padding is handled by each internal child instead */
   }
 
   .featured-visual {
-    /* The black visual panel inside a featured card.
-       Currently not rendered in the HTML — kept for future use. */
+    /* The black visual panel on the left side of the featured card */
     background: var(--ink);
     min-height: 360px;
     display: flex;
@@ -635,43 +526,37 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    z-index: 1; /* Sits above any content that might bleed through from sections above */
   }
 
   .featured-visual-type {
-    /* The large ghost/outline display text inside the featured visual panel.
-       e.g. "VOLNA" or "Projects:" — purely decorative.
-       Currently not rendered in the HTML — kept for future use. */
+    /* The large ghost display type inside the black panel ("DATA LAKE") */
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 700;
-    color: var(--paper);                          /* Filled with paper white */
-    -webkit-text-stroke: 1px rgba(245,243,239,0.25); /* Faint outline adds depth */
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(245,243,239,0.25);
     letter-spacing: -0.04em;
     line-height: 0.9;
-    user-select: none; /* Prevents text selection since it's decorative */
+    user-select: none;
     padding: 2rem;
   }
 
   .featured-visual-badge {
-    /* Small "FEATURED — 2026" label pinned to the top-left of the black panel.
-       Currently not rendered in the HTML — kept for future use. */
+    /* "Featured — 2026" label pinned to the top-left of the black panel */
     position: absolute;
     top: 2rem; left: 2rem;
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(245,243,239,0.5); /* Semi-transparent paper color on the dark background */
+    color: rgba(245,243,239,0.5); /* Semi-transparent paper color on dark background */
   }
 
   .featured-content {
-    /* The content panel on the right side of a featured card —
-       holds the project title, tags, description, and buttons.
-       Currently not rendered in the HTML — kept for future use. */
+    /* Right panel of the featured card — project info */
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Title group at top, description/buttons at bottom */
+    justify-content: space-between; /* Title group at top, description at bottom */
     border-left: 0.5px solid var(--rule);
   }
 
@@ -680,60 +565,45 @@
      SKILLS SECTION — dense editorial columns
      Four equal columns — one per skill category. Dense editorial
      typographic columns like a magazine's credits page.
-     Sits directly below the "Capabilities" section-heading band.
      ============================================================ */
 
   .skills-section {
-    /* Wrapper for the four-column skills grid.
-       Sits below the black "Capabilities" section-heading banner.
-       Background is now --paper (light) so the content reads as
-       black text on white — consistent with the other content sections. */
-    border-bottom: 0.5px solid var(--rule); /* Hairline rule closing the section at the bottom */
+    border-bottom: 0.5px solid var(--rule);
   }
 
   .skills-grid {
-    /* The four-column grid that holds Languages, Frontend, Data/ML, and Infrastructure columns */
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns.
-                                               Equivalent to writing: 1fr 1fr 1fr 1fr */
+    grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns. Equivalent to writing 1fr 1fr 1fr 1fr */
   }
 
   .skill-col {
-    /* Each individual skill column — e.g. the "Languages" column with Python, R, etc. */
     padding: 2.5rem;
-    border-right: 0.5px solid var(--rule); /* Vertical hairline rule between columns */
+    border-right: 0.5px solid var(--rule); /* Vertical rule between columns */
   }
 
-  .skill-col:last-child {
-    border-right: none;
-    /* :last-child targets the final column (Infrastructure).
-       Removes its right border so there's no line at the section's right edge */
-  }
+  .skill-col:last-child { border-right: none; }
+  /* :last-child removes the border from the final column so there's no line at the right edge */
 
   .skill-col-title {
-    /* The category label at the top of each column: "LANGUAGES", "FRONTEND", etc. */
+    /* Category heading inside each skill column, e.g. "Languages" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mid);  /* White text — will need updating to var(--mid) if
-                             background is changed back to paper */
-    border-bottom: 0.5px solid rgba(240,237,232,0.2);
+    color: var(--mid);
+    margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating the title from the list below.
-                                               This second border-bottom declaration overrides the first */
+    border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating heading from list */
   }
 
   .skill-list {
-    /* The <ul> holding the individual skill items beneath each column title */
     list-style: none; /* Removes default bullet points */
     display: flex;
     flex-direction: column;
-    gap: 0.6rem; /* Space between each skill item */
+    gap: 0.6rem;
   }
 
   .skill-list li {
-    /* Each individual skill item — e.g. "Python", "React / Next.js", "Docker" */
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
@@ -743,192 +613,477 @@
   /* ============================================================
      ABOUT SECTION — asymmetric two-column Marni spread
      Asymmetric 2:3 column split — narrower left column holds
-     the location info, wider right column holds the body
-     paragraph and experience timeline.
-     Sits directly below the "About me." section-heading band.
+     the large display heading and location, wider right column
+     holds the body paragraph and timeline. Mirrors the Marni
+     spread's unequal column structure.
      ============================================================ */
+
   .about-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 40vh;
+    grid-template-columns: 2fr 3fr; /* Left column is 2 parts, right is 3 parts of available width */
     border-bottom: 0.5px solid var(--rule);
   }
 
   .about-left {
-    /* The narrower left column — currently holds just the "Based in / San Diego, CA" info
-       pinned to the bottom. The "About me." heading was here but was removed since
-       the section-heading banner above handles that now. */
     padding: 3rem 2.5rem;
-    border-right: 0.5px solid var(--rule); /* Vertical rule separating left and right columns */
+    border-right: 0.5px solid var(--rule);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Content pinned to bottom via space-between with a single child */
+    justify-content: space-between; /* "About me." at top, location info pinned to bottom */
+    position: relative; /* positioning context for card-shine and card-background */
+    overflow: hidden;   /* clips the tile/line effect at the column boundary */
   }
 
-.about-right {
+  .about-big-text {
+    /* The large "About me." display heading */
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.9; /* Tightly stacked — "About" and "me." overlap vertically */
+  }
+
+  .about-right {
     padding: 3rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-rows: auto auto; /* Two rows: body paragraph, then timeline */
+    gap: 2rem;
+    position: relative; /* positioning context for card-shine and card-background */
+    overflow: hidden;   /* clips the tile/line effect at the column boundary */
   }
 
   .about-body {
-     /* The bio paragraph: "I work at the intersection of data engineering..." */
     font-size: 15px;
-    line-height: 1.8;
+    line-height: 1.8; /* Generous line height for readable body text */
     color: var(--mid);
-    max-width: 52ch;
+    max-width: 52ch; /* Constrains line length to ~52 characters for comfortable reading */
   }
 
   .about-body strong {
-    /* Inline emphasis inside the bio — e.g. "data engineering", "machine learning".
-       CSS overrides the inherited muted gray so these terms stand out. */
-    color: var(--ink); /* Full ink black — pops against the surrounding muted gray */
+    /* Inline emphasis within the body paragraph */
+    color: var(--ink); /* Overrides the muted gray so bolded terms pop to full black */
     font-weight: 500;
   }
 
   .about-timeline {
-    /* Container for all the experience timeline rows */
     display: flex;
     flex-direction: column;
-    gap: 0; /* No gap between rows — borders handle the visual separation */
+    gap: 0;
+    border-top: 0.5px solid var(--rule);
   }
 
-   .timeline-item {
-     /* Each individual row in the experience timeline —
-       e.g. "2025 - Present | Fashion Market Intelligence Platform" */
+  .timeline-item {
+    /* Each entry in the experience timeline */
     display: grid;
-    grid-template-columns: 6rem 1fr;
+    grid-template-columns: 6rem 1fr; /* Fixed 6rem year column, flexible content column */
     gap: 1.5rem;
     padding: 1.2rem 0;
-    border-bottom: 0.5px solid var(--rule);
-    align-items: baseline;
+    border-bottom: 0.5px solid var(--rule); /* Rule between each timeline entry */
+    align-items: baseline; /* Aligns the year and title text along their baselines */
   }
 
   .timeline-year {
-    /* The date range on the left side of each timeline row: "2025 - Present" */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: var(--mid); /* Muted — supporting context, not the primary information */
+    color: var(--mid);
   }
 
   .timeline-title {
-    /* The job/project title on the right side of each timeline row */
     font-size: 14px;
     font-weight: 500;
   }
 
   .timeline-place {
-    /* The secondary line beneath the title: institution or organization name */
     font-size: 12px;
-    color: var(--mid); /* Muted gray — secondary information */
+    color: var(--mid);
     margin-top: 2px;
   }
 
 
   /* ============================================================
      CONTACT SECTION
-     Two-column layout: availability note on the left,
-     contact link rows (email, GitHub, LinkedIn, resume) on
-     the right. Sits directly below the "Get in touch." band.
+     Two-column layout: large display headline on the left,
+     link rows on the right. Right column uses flex-end so
+     the links stack from the bottom up.
      ============================================================ */
 
   .contact-section {
-    /* The two-column content area below the "Get in touch." black header band */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    min-height: 40vh; /* Ensures the section has substantial vertical presence on the page */
+    grid-template-columns: 1fr 1fr;
+    min-height: 40vh; /* Ensures the section has substantial vertical presence */
   }
 
   .contact-left {
-    /* The left column — holds the availability note:
-       "Open to full-time roles, contract work, and research collaborations." */
     padding: 3rem 2.5rem;
-    border-right: 0.5px solid var(--rule); /* Vertical rule between left and right columns */
+    border-right: 0.5px solid var(--rule);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Content distributed vertically */
+    justify-content: space-between;
+    position: relative; /* positioning context for card-shine and card-background */
+    overflow: hidden;   /* clips the tile/line effect at the column boundary */
   }
 
   .contact-headline {
-    /* Legacy style for the large "Get in touch." stacked heading that used to live
-       inside contact-left. Now replaced by the section-heading banner above.
-       Kept in case it's needed again. */
+    /* The large "Get in touch." stacked heading */
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 0.95;
+    line-height: 0.95; /* Tight stacking for multi-line display heading */
   }
 
   .contact-right {
-    /* The right column — holds the four contact method rows:
-       Email, GitHub, LinkedIn, and Resume download */
+    /* Contact links sit at the bottom of the column */
     padding: 3rem 2.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* Rows are pushed to the bottom of the column */
+    justify-content: flex-end;
     gap: 1.5rem;
+    position: relative; /* positioning context for card-shine and card-background */
+    overflow: hidden;   /* clips the tile/line effect at the column boundary */
   }
 
   .contact-link-row {
-    /* Each contact method displayed as a label/value pair on one line —
-       e.g. "EMAIL" on the left, "rj.j.newton@gmail.com" on the right */
+    /* Each contact method (email, GitHub, etc.) as a label/value pair */
     display: flex;
-    justify-content: space-between; /* Label pushed to far left, value to far right */
+    justify-content: space-between; /* Label left-aligned, value right-aligned */
     align-items: center;
-    border-top: 0.5px solid var(--rule); /* Hairline rule above each row */
+    border-top: 0.5px solid var(--rule); /* Rule above each row */
     padding-top: 1rem;
   }
 
   .contact-link-label {
-    /* The left side label: "EMAIL", "GITHUB", "LINKEDIN", "RESUME" */
+    /* Left side: "Email", "GitHub", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mid); /* Muted gray — the label is supporting context for the link */
+    color: var(--mid);
   }
 
   .contact-link-val {
-    /* The right side value — the actual clickable link text */
+    /* Right side: the actual link text */
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     color: var(--ink);
     border-bottom: 0.5px solid transparent; /* Invisible border held in reserve —
-                                                prevents layout shift when it appears on hover */
-    transition: border-color 0.15s; /* Smooth underline reveal on hover */
+                                                keeps layout stable when border appears on hover */
+    transition: border-color 0.15s;
   }
 
   .contact-link-val:hover { border-color: var(--ink); }
-  /* On hover: a hairline underline appears beneath the link text,
-     revealing itself from the transparent reserve border above */
+  /* On hover, the transparent border becomes visible — a subtle underline reveals itself */
 
 
   /* ============================================================
      FOOTER
-     Minimal two-item row at the very bottom of the page.
-     Left side: "RJ NEWTON — DEVELOPER PORTFOLIO"
-     Right side: "© 2026. ALL RIGHTS RESERVED."
+     Minimal two-item row with the same hairline border treatment
+     used throughout.
      ============================================================ */
 
   footer {
     padding: 1.2rem 2.5rem;
-    border-top: 0.5px solid var(--rule); /* Hairline rule separating footer from contact section */
+    border-top: 0.5px solid var(--rule);
     display: flex;
-    justify-content: space-between; /* Left text and right text pushed to opposite edges */
+    justify-content: space-between;
     align-items: center;
   }
 
   footer p {
-    /* Both text items in the footer use the same monospace label style */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mid); /* Muted gray — footer is low-hierarchy supporting information */
+    color: var(--mid);
   }
+
+
+  /* ============================================================
+     CARD SHINE & TILE EFFECT
+     Applied to project cards, about section columns, and contact
+     section columns. Translated from a CodePen by Aaron Iker,
+     adapted to use the site's ink/paper palette instead of green.
+
+     The effect has three layers inside each card:
+     1. .shine  — a conic gradient that follows the mouse cursor,
+                  creating a light-sweep glow on hover
+     2. .tiles  — small ink-tinted rectangles that flash in
+                  sequence via CSS animation on hover
+     3. .lines  — horizontal and vertical hairlines that draw
+                  themselves in on hover using scaleX/scaleY
+     ============================================================ */
+
+  /* ── SHARED CARD EFFECT VARIABLES ──
+     These CSS custom properties are declared on :root so they're
+     available to both .project-card, .about-left/.about-right,
+     and .contact-left/.contact-right without duplication. */
+
+  :root {
+    /* Shine gradient — pure ink at low opacity, conic shape that
+       rotates to follow cursor position via JS */
+    --card-shine-opacity: 0.06;
+    --card-shine-gradient: conic-gradient(
+      from 205deg at 50% 50%,
+      rgba(10,10,10,0) 0deg,
+      rgba(10,10,10,0.8) 25deg,
+      rgba(10,10,10,0.1) 295deg,
+      rgba(10,10,10,0) 360deg
+    );
+
+    /* Tile color — ink at very low opacity, subtle grid squares */
+    --card-tile-color: rgba(10,10,10,0.04);
+
+    /* Line color — the rule gray used throughout the site */
+    --card-line-color: var(--rule);
+  }
+
+  /* ── SHINE LAYER ──
+     A div placed inside each card. Invisible at rest, fades in
+     on hover. Contains a ::before pseudo-element with the conic
+     gradient that JS rotates to follow the cursor. */
+
+  .card-shine {
+    /* Covers the entire card surface */
+    border-radius: inherit;
+    position: absolute;
+    inset: 0;
+    z-index: 1;          /* Above the background layer, below the content */
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none; /* Never intercepts clicks */
+  }
+
+  .card-shine::before {
+    /* The actual gradient circle — large enough to fill the card
+       from any angle. JS updates --mouse-x and --mouse-y on the
+       parent card element so the gradient always follows the cursor. */
+    content: '';
+    width: 150%;
+    padding-bottom: 150%;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    bottom: 55%;
+    filter: blur(35px);
+    opacity: var(--card-shine-opacity);
+    transform: translateX(-50%);
+    background-image: var(--card-shine-gradient);
+    /* The gradient origin is updated by JS via CSS custom properties */
+  }
+
+  /* Show shine on hover for all card types */
+  .project-card:hover .card-shine,
+  .about-left:hover .card-shine,
+  .about-right:hover .card-shine,
+  .contact-left:hover .card-shine,
+  .contact-right:hover .card-shine {
+    opacity: 1;
+    transition-duration: 0.5s;
+    transition-delay: 0s;
+  }
+
+  /* ── BACKGROUND LAYER (tiles + lines) ──
+     Contains the animated tile grid and the drawing lines.
+     Masked so the effect only shows in the top portion of the card,
+     fading out toward the bottom — same as the original CodePen. */
+
+  .card-background {
+    border-radius: inherit;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    /* radial-gradient mask: opaque at top, transparent at bottom.
+       This makes the tiles/lines visible near the top of the card
+       and fade out so they don't interfere with the card content. */
+    -webkit-mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+    mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+  }
+
+  /* ── TILES ──
+     Ten small rectangles positioned in a grid pattern.
+     All start at opacity 0. On card hover they animate via the
+     @keyframes tile rule, flashing in at staggered intervals. */
+
+  .card-tiles {
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  /* Show tiles on hover */
+  .project-card:hover .card-tiles,
+  .about-left:hover .card-tiles,
+  .about-right:hover .card-tiles,
+  .contact-left:hover .card-tiles,
+  .contact-right:hover .card-tiles {
+    opacity: 1;
+    transition-delay: 0.25s;
+  }
+
+  .card-tile {
+    position: absolute;
+    background-color: var(--card-tile-color);
+    animation-duration: 8s;
+    animation-iteration-count: infinite;
+    opacity: 0;
+  }
+
+  /* Staggered animation delays — each tile starts its flash cycle
+     at a different point so they don't all pulse simultaneously */
+  .card-tile.tile-4,
+  .card-tile.tile-6,
+  .card-tile.tile-10 { animation-delay: -2s; }
+
+  .card-tile.tile-3,
+  .card-tile.tile-5,
+  .card-tile.tile-8  { animation-delay: -4s; }
+
+  .card-tile.tile-2,
+  .card-tile.tile-9  { animation-delay: -6s; }
+
+  /* Fire the tile animation only when the parent card is hovered */
+  .project-card:hover .card-tile,
+  .about-left:hover .card-tile,
+  .about-right:hover .card-tile,
+  .contact-left:hover .card-tile,
+  .contact-right:hover .card-tile {
+    animation-name: card-tile-flash;
+  }
+
+  /* Tile positions — 10 rectangles arranged in a 4-column grid
+     across the top portion of the card */
+  .card-tile.tile-1  { top: 0;     left: 0;     height: 10%;   width: 22.5%; }
+  .card-tile.tile-2  { top: 0;     left: 22.5%; height: 10%;   width: 27.5%; }
+  .card-tile.tile-3  { top: 0;     left: 50%;   height: 10%;   width: 27.5%; }
+  .card-tile.tile-4  { top: 0;     left: 77.5%; height: 10%;   width: 22.5%; }
+  .card-tile.tile-5  { top: 10%;   left: 0;     height: 22.5%; width: 22.5%; }
+  .card-tile.tile-6  { top: 10%;   left: 22.5%; height: 22.5%; width: 27.5%; }
+  .card-tile.tile-7  { top: 10%;   left: 50%;   height: 22.5%; width: 27.5%; }
+  .card-tile.tile-8  { top: 10%;   left: 77.5%; height: 22.5%; width: 22.5%; }
+  .card-tile.tile-9  { top: 32.5%; left: 50%;   height: 22.5%; width: 27.5%; }
+  .card-tile.tile-10 { top: 32.5%; left: 77.5%; height: 22.5%; width: 22.5%; }
+
+  /* Tile flash animation — opacity pulses from 1 to 0 and back */
+  @keyframes card-tile-flash {
+    0%, 12.5%, 100% { opacity: 1; }
+    25%, 82.5%      { opacity: 0; }
+  }
+
+  /* ── LINES ──
+     Three .card-line divs, each drawing a horizontal and vertical
+     hairline via scaleX/scaleY transforms on ::before and ::after.
+     Lines start at scale 0 and grow to scale 1 on hover, with
+     staggered transition-delays so they draw in sequence. */
+
+  .card-line {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  /* Show lines on hover */
+  .project-card:hover .card-line,
+  .about-left:hover .card-line,
+  .about-right:hover .card-line,
+  .contact-left:hover .card-line,
+  .contact-right:hover .card-line {
+    opacity: 1;
+    transition-duration: 0.15s;
+  }
+
+  .card-line::before,
+  .card-line::after {
+    content: '';
+    position: absolute;
+    background-color: var(--card-line-color);
+    transition: transform 0.35s;
+  }
+
+  /* Horizontal line — grows left to right */
+  .card-line::before {
+    left: 0;
+    right: 0;
+    height: 0.5px;
+    transform-origin: 0 50%;
+    transform: scaleX(0); /* starts collapsed */
+  }
+
+  /* Vertical line — grows top to bottom */
+  .card-line::after {
+    top: 0;
+    bottom: 0;
+    width: 0.5px;
+    transform-origin: 50% 0;
+    transform: scaleY(0); /* starts collapsed */
+  }
+
+  /* Grow lines on hover */
+  .project-card:hover .card-line::before,
+  .about-left:hover .card-line::before,
+  .about-right:hover .card-line::before,
+  .contact-left:hover .card-line::before,
+  .contact-right:hover .card-line::before { transform: scaleX(1); }
+
+  .project-card:hover .card-line::after,
+  .about-left:hover .card-line::after,
+  .about-right:hover .card-line::after,
+  .contact-left:hover .card-line::after,
+  .contact-right:hover .card-line::after  { transform: scaleY(1); }
+
+  /* Line positions — three lines at different vertical/horizontal offsets,
+     each with a staggered delay so they draw in sequence on hover */
+
+  /* Line 1 — draws first (no delay on hover, longest delay at rest) */
+  .card-line.line-1::before { top: 10%; }
+  .card-line.line-1::after  { left: 22.5%; }
+  .card-line.line-1::before,
+  .card-line.line-1::after  { transition-delay: 0.3s; }
+
+  /* Line 2 — draws second */
+  .card-line.line-2::before { top: 32.5%; }
+  .card-line.line-2::after  { left: 50%; }
+  .card-line.line-2::before,
+  .card-line.line-2::after  { transition-delay: 0.15s; }
+
+  /* Line 3 — draws third (no delay) */
+  .card-line.line-3::before { top: 55%; }
+  .card-line.line-3::after  { right: 22.5%; }
+
+  /* On hover: reverse the delay order so line-1 draws first */
+  .project-card:hover .card-line.line-1::before,
+  .project-card:hover .card-line.line-1::after,
+  .about-left:hover .card-line.line-1::before,
+  .about-left:hover .card-line.line-1::after,
+  .about-right:hover .card-line.line-1::before,
+  .about-right:hover .card-line.line-1::after,
+  .contact-left:hover .card-line.line-1::before,
+  .contact-left:hover .card-line.line-1::after,
+  .contact-right:hover .card-line.line-1::before,
+  .contact-right:hover .card-line.line-1::after { transition-delay: 0s; }
+
+  .project-card:hover .card-line.line-2::before,
+  .project-card:hover .card-line.line-2::after,
+  .about-left:hover .card-line.line-2::before,
+  .about-left:hover .card-line.line-2::after,
+  .about-right:hover .card-line.line-2::before,
+  .about-right:hover .card-line.line-2::after,
+  .contact-left:hover .card-line.line-2::before,
+  .contact-left:hover .card-line.line-2::after,
+  .contact-right:hover .card-line.line-2::before,
+  .contact-right:hover .card-line.line-2::after { transition-delay: 0.15s; }
+
+  .project-card:hover .card-line.line-3::before,
+  .project-card:hover .card-line.line-3::after,
+  .about-left:hover .card-line.line-3::before,
+  .about-left:hover .card-line.line-3::after,
+  .about-right:hover .card-line.line-3::before,
+  .about-right:hover .card-line.line-3::after,
+  .contact-left:hover .card-line.line-3::before,
+  .contact-left:hover .card-line.line-3::after,
+  .contact-right:hover .card-line.line-3::before,
+  .contact-right:hover .card-line.line-3::after { transition-delay: 0.3s; }
 
   /* ============================================================
      ANIMATIONS
@@ -1000,6 +1155,24 @@
 <body>
 
 <!-- ============================================================
+     HERO PORTRAIT IMAGE
+     A single <div> containing the <img> tag.
+     Positioned absolutely inside the hero section so it sits
+     behind the text content. No separate bg-layer wrapper needed
+     since the hero itself is position: relative.
+     The gradient and grain divs have been removed — they were
+     designed for a dark photo background and aren't needed now
+     that the hero uses a light paper background.
+     ============================================================ -->
+<div class="hero-bg-image" id="heroBgImage">
+  <img src="IMG_2389.jpg" alt="RJ Newton">
+  <!-- <img> loads the portrait photo. src path must match the filename
+       in the same folder as this HTML file in your GitHub repo.
+       alt text describes the image for screen readers and displays
+       if the image fails to load. -->
+</div>
+
+<!-- ============================================================
      NAVIGATION
      Fixed bar. <nav> is a semantic HTML5 landmark element —
      screen readers use it to identify navigation regions.
@@ -1027,24 +1200,6 @@
      this the positioning context for .hero-bg-image inside it.
      ============================================================ -->
 <section class="hero">
-     
-<!-- ============================================================
-     HERO PORTRAIT IMAGE
-     A single <div> containing the <img> tag.
-     Positioned absolutely inside the hero section so it sits
-     behind the text content. No separate bg-layer wrapper needed
-     since the hero itself is position: relative.
-     The gradient and grain divs have been removed — they were
-     designed for a dark photo background and aren't needed now
-     that the hero uses a light paper background.
-     ============================================================ -->
-<div class="hero-bg-image" id="heroBgImage">
-  <img src="IMG_2389.jpg" alt="RJ Newton">
-  <!-- <img> loads the portrait photo. src path must match the filename
-       in the same folder as this HTML file in your GitHub repo.
-       alt text describes the image for screen readers and displays
-       if the image fails to load. -->
-</div>
 
   <!-- LEFT COLUMN — name, description, CTA buttons -->
   <div class="hero-left fade-in">
@@ -1064,7 +1219,7 @@
 
     <div class="hero-cta-row" style="margin-top: 2rem;">
       <!-- <div> groups the two buttons and applies flex layout via .hero-cta-row -->
-      <a href="#projects" class="btn-primary"><span>View work</span><span class="btn-arrow">→</span></a>
+      <a href="#projects" class="btn-primary">View work</a>
       <!-- Anchor styled as a filled button — scrolls to projects section -->
       <a href="#contact" class="btn-ghost" style="margin-left: 1rem;">Get in touch ↗</a>
       <!-- Ghost/text button — ↗ is a unicode diagonal arrow character -->
@@ -1106,27 +1261,50 @@
      link and the hero "View work" CTA.
      ============================================================ -->
 <section id="projects">
-  <div class="section-heading">Projects:</div>
+
+  <div class="section-banner">
+    <h2 class="section-banner-title">Selected<br>Work</h2>
+    <!-- <h2> = second-level heading — correct hierarchy below the page's single <h1> -->
+    <div class="section-banner-meta">
+      <p>2023 — 2026</p>
+      <p style="margin-top: 4px;">6 projects</p>
+    </div>
+  </div>
+
   <div class="projects-grid">
 
-    <!-- ── CARD 01: VOLNA ── -->
-    <a href="https://volnatrends.com/" target="_blank" class="project-card">
-      <p class="project-index">01</p>
-      <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
-      <div class="project-tags">
-        <span class="tag">Flask</span>
-        <span class="tag">Python</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">Supabase</span>
-        <span class="tag">PostgreSQL</span>
-        <span class="tag">Librosa</span>
+    <!-- ── FEATURED CARD: VOLNA (spans full width) ── -->
+    <a href="https://volnatrends.com" target="_blank" class="project-card featured">
+    <!-- target="_blank" opens the link in a new tab — good practice for external links -->
+
+      <div class="featured-visual">
+        <p class="featured-visual-badge">Featured — 2026</p>
+        <div class="featured-visual-type">VOLNA</div>
+        <!-- Decorative ghost display type — purely visual, user-select: none in CSS -->
       </div>
-      <p class="project-desc">Relational database platform tracking hundreds of brands, 1,600+ collections, and hundreds of aesthetic tags across a multitude of interconnected tables. Features Google Trends integration and style-matching methodology rooted in consumer psychology.</p>
-      <span class="project-arrow">↗</span>
-      <!-- ↗ is a unicode arrow. CSS positions it absolutely in the bottom-right
-           corner and animates it upward-right on card hover. -->
+
+      <div class="featured-content">
+        <div>
+          <p class="project-index">01 — Featured</p>
+          <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
+          <!-- <h3> = third-level heading. Correct hierarchy: h1 → h2 → h3 -->
+          <div class="project-tags" style="margin-top: 1.2rem;">
+            <span class="tag">Python</span>
+            <!-- Each <span> is an inline element styled as a tech tag pill -->
+            <span class="tag">Flask</span>
+            <span class="tag">Supabase</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">JavaScript</span>
+          </div>
+        </div>
+        <p class="project-desc">Relational database platform tracking 150+ brands, 1,600+ collections, and 203 aesthetic tags across nine interconnected tables. Features Google Trends integration and style-matching methodology rooted in consumer psychology.</p>
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
+          <a href="https://volnatrends.com" target="_blank" class="btn-primary">Visit site</a>
+          <a href="https://github.com/rjjj444" target="_blank" class="btn-ghost">GitHub ↗</a>
+        </div>
+      </div>
     </a>
-       
+
     <!-- ── CARD 02: DOLPHIN UMAP CLASSIFIER ── -->
     <a href="https://github.com/rjjj444/Dolphin-UMAP-Model" target="_blank" class="project-card">
       <p class="project-index">02</p>
@@ -1141,6 +1319,19 @@
       <span class="project-arrow">↗</span>
       <!-- ↗ is a unicode arrow. CSS positions it absolutely in the bottom-right
            corner and animates it upward-right on card hover. -->
+      <div class="card-shine"></div>
+      <div class="card-background">
+        <div class="card-tiles">
+          <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+          <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+          <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+          <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+          <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+        </div>
+        <div class="card-line line-1"></div>
+        <div class="card-line line-2"></div>
+        <div class="card-line line-3"></div>
+      </div>
     </a>
 
     <!-- ── CARD 03: DOLPHIN CNN WHISTLE DETECTOR ── -->
@@ -1155,6 +1346,19 @@
       </div>
       <p class="project-desc">CNN-based whistle detection model integrating Raven Pro selection tables and the SEANOE public dataset. Achieves strong early detection results on held-out dolphin vocalization recordings.</p>
       <span class="project-arrow">↗</span>
+      <div class="card-shine"></div>
+      <div class="card-background">
+        <div class="card-tiles">
+          <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+          <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+          <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+          <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+          <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+        </div>
+        <div class="card-line line-1"></div>
+        <div class="card-line line-2"></div>
+        <div class="card-line line-3"></div>
+      </div>
     </a>
 
     <!-- ── CARD 04: SEM REPLICATION STUDY ── -->
@@ -1169,12 +1373,25 @@
       </div>
       <p class="project-desc">Structural equation model replication of Zhang & Zhang's blind box consumer behavior paper (Frontiers in Psychology), omitting the functional value variable to test model robustness.</p>
       <span class="project-arrow">↗</span>
+      <div class="card-shine"></div>
+      <div class="card-background">
+        <div class="card-tiles">
+          <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+          <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+          <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+          <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+          <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+        </div>
+        <div class="card-line line-1"></div>
+        <div class="card-line line-2"></div>
+        <div class="card-line line-3"></div>
+      </div>
     </a>
 
-    <!-- ── CARD 05: CREATIVE PORTFOLIO SITE ── -->
+    <!-- ── CARD 05: MODELING PORTFOLIO SITE ── -->
     <a href="https://rjnewton.com" target="_blank" class="project-card">
       <p class="project-index">05</p>
-      <h3 class="project-title">RJ Newton<br>Creative Portfolio</h3>
+      <h3 class="project-title">RJ Newton<br>Modeling Portfolio</h3>
       <div class="project-tags">
         <span class="tag">HTML</span>
         <span class="tag">CSS</span>
@@ -1183,6 +1400,19 @@
       </div>
       <p class="project-desc">Hand-coded editorial portfolio site for modeling, creative direction, and styling work. Features cinematic background compositing, GSAP parallax, and individual campaign pages.</p>
       <span class="project-arrow">↗</span>
+      <div class="card-shine"></div>
+      <div class="card-background">
+        <div class="card-tiles">
+          <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+          <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+          <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+          <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+          <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+        </div>
+        <div class="card-line line-1"></div>
+        <div class="card-line line-2"></div>
+        <div class="card-line line-3"></div>
+      </div>
     </a>
 
     <!-- ── CARD 06: THIS DEV PORTFOLIO ── -->
@@ -1197,6 +1427,19 @@
       </div>
       <p class="project-desc">This site. Hand-coded editorial portfolio inspired by fashion magazine design systems — Balenciaga campaign typography, Marni spread grid structure, and Mingyu magazine banner treatment.</p>
       <span class="project-arrow">↗</span>
+      <div class="card-shine"></div>
+      <div class="card-background">
+        <div class="card-tiles">
+          <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+          <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+          <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+          <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+          <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+        </div>
+        <div class="card-line line-1"></div>
+        <div class="card-line line-2"></div>
+        <div class="card-line line-3"></div>
+      </div>
     </a>
 
   </div>
@@ -1207,10 +1450,16 @@
      SKILLS SECTION
      id="skills" is the scroll target for the nav link.
      ============================================================ -->
-<section id="skills">
-  <div class="section-heading">Capabilities</div>
-  <div class="skills-section">
-    <div class="skills-grid">
+<section id="skills" class="skills-section">
+
+  <div class="section-banner">
+    <h2 class="section-banner-title">Capabilities</h2>
+    <div class="section-banner-meta">
+      <p>Full-stack + data</p>
+    </div>
+  </div>
+
+  <div class="skills-grid">
 
     <div class="skill-col">
       <p class="skill-col-title">Languages</p>
@@ -1260,7 +1509,6 @@
       </ul>
     </div>
 
-   </div>
   </div>
 </section>
 
@@ -1269,94 +1517,122 @@
      ABOUT SECTION
      id="about" is the scroll target for the nav link.
      ============================================================ -->
+<section id="about" class="about-section">
 
- <section id="about">
-  <div class="section-heading">About me.</div>
-  <div class="about-section">
-
-    <div class="about-left">
-      <p class="about-body">
-        I work at the intersection of <strong>data engineering</strong>,
-        <strong>machine learning</strong>, and <strong>frontend design</strong>.
-        I'm interested in systems that handle real complexity — not just
-        technically, but in terms of what they reveal to the people using
-        them.<br><br>
-        Having studied cognitive psychology with an emphasis on data analytics
-        at UC San Diego while building in the data and ML space, I think the
-        most interesting problems sit between disciplines: where behavioral
-        science meets data, where visual design meets systems architecture.
-
-              <!-- <strong> provides semantic emphasis — CSS overrides its color to ink black
-           so it stands out from the muted paragraph text -->
-      </p>
+  <div class="about-left">
+    <div class="about-big-text">About<br>me.</div>
+    <!-- <br> forces "About" and "me." onto separate lines for the stacked effect -->
+    <div>
+      <!-- Location block pinned to the bottom via justify-content: space-between -->
+      <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.5rem;">Based in</p>
+      <p style="font-size: 14px; font-weight: 500;">San Diego, CA</p>
     </div>
+    <!-- Card shine and tile effect layers — purely decorative, pointer-events: none in CSS -->
+    <div class="card-shine"></div>
+    <div class="card-background">
+      <div class="card-tiles">
+        <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+        <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+        <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+        <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+        <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+      </div>
+      <div class="card-line line-1"></div>
+      <div class="card-line line-2"></div>
+      <div class="card-line line-3"></div>
+    </div>
+  </div>
 
-    <div class="about-right">
-      <div class="about-timeline">
+  <div class="about-right">
+    <p class="about-body">
+      I work at the intersection of <strong>data engineering</strong>, <strong>machine learning</strong>, and <strong>frontend design</strong>. I'm interested in systems that handle real complexity — not just technically, but in terms of what they reveal to the people using them.<br><br>
+      <!-- <strong> provides semantic emphasis — CSS overrides its color to ink black
+           so it stands out from the muted paragraph text -->
+      Currently studying cognitive psychology at UC San Diego while building in the data and ML space. I think the most interesting problems sit between disciplines: where behavioral science meets data, where visual design meets systems architecture.
+    </p>
 
-       <!-- Experience timeline — each row is a two-column mini-grid: year | title+place -->
-        <div class="timeline-item">
-          <span class="timeline-year">2025 - Present</span>
-          <!-- <span> contains the year — inline element occupying one grid cell -->
-          <div>
-            <p class="timeline-title">Fashion Market Intelligence Platform</p>
-            <p class="timeline-place">Independent software development</p>
-          </div>
+    <!-- Experience timeline — each row is a two-column mini-grid: year | title+place -->
+    <div class="about-timeline">
+
+      <div class="timeline-item">
+        <span class="timeline-year">2026</span>
+        <!-- <span> contains the year — inline element occupying one grid cell -->
+        <div>
+          <p class="timeline-title">Fashion Market Intelligence Platform</p>
+          <p class="timeline-place">Independent software development</p>
         </div>
+      </div>
 
-        <div class="timeline-item">
-          <span class="timeline-year">2025 - Present</span>
-          <div>
-            <p class="timeline-title">Data Science Research</p>
-            <p class="timeline-place">UC San Diego — cognitive bioacoustics lab</p>
-          </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2025</span>
+        <div>
+          <p class="timeline-title">Data Science Research</p>
+          <p class="timeline-place">UC San Diego — cognitive bioacoustics lab</p>
         </div>
+      </div>
 
-        <div class="timeline-item">
-          <span class="timeline-year">2025 - 2026</span>
-          <div>
-            <p class="timeline-title">Lead Quantitative Data Analyst</p>
-            <p class="timeline-place">UC San Diego — Research Committee</p>
-          </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2024</span>
+        <div>
+          <p class="timeline-title">Full-Stack Developer</p>
+          <p class="timeline-place">Freelance</p>
         </div>
+      </div>
 
-        <div class="timeline-item">
-          <span class="timeline-year">2024 - Present</span>
-          <div>
-            <p class="timeline-title">Full-Stack Developer</p>
-            <p class="timeline-place">Freelance</p>
-          </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2023</span>
+        <div>
+          <p class="timeline-title">B.S. — Cognitive Psychology</p>
+          <p class="timeline-place">University of California San Diego</p>
         </div>
+      </div>
 
-        <div class="timeline-item">
-          <span class="timeline-year">2024 - 2026</span>
-          <div>
-            <p class="timeline-title">B.S. — Cognitive Psychology</p>
-            <p class="timeline-place">University of California San Diego</p>
-          </div>
-        </div>
-
-      </div> <!-- closes about-timeline -->
-    </div> <!-- closes about-right -->
-
-  </div> <!-- closes about-section -->
-</section> <!-- closes #about -->
-
-<!-- ============================================================
-     CONTACT SECTION
+    </div>
+    <!-- Card shine and tile effect layers on the right column -->
+    <div class="card-shine"></div>
+    <div class="card-background">
+      <div class="card-tiles">
+        <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+        <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+        <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+        <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+        <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+      </div>
+      <div class="card-line line-1"></div>
+      <div class="card-line line-2"></div>
+      <div class="card-line line-3"></div>
+    </div>
+  </div>
+</section>
      id="contact" is the scroll target for the nav link and
      the hero "Get in touch" button.
      ============================================================ -->
-<section id="contact">
-  <div class="section-heading">Get in touch.</div>
-  <div class="contact-section">
+<section id="contact" class="contact-section">
 
   <div class="contact-left">
+    <p class="hero-eyebrow">Let's work together</p>
     <!-- Reuses .hero-eyebrow class for consistent small uppercase label treatment -->
+
+    <h2 class="contact-headline">Get<br>in<br>touch.</h2>
+    <!-- Three <br> tags stack each word on its own line -->
 
     <p class="hero-desc" style="border-top: 0.5px solid var(--rule); padding-top: 1.5rem; margin-top: 1.5rem;">
       Open to full-time roles, contract work, and research collaborations. I typically respond within 24 hours.
     </p>
+    <!-- Card shine and tile effect layers -->
+    <div class="card-shine"></div>
+    <div class="card-background">
+      <div class="card-tiles">
+        <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+        <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+        <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+        <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+        <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+      </div>
+      <div class="card-line line-1"></div>
+      <div class="card-line line-2"></div>
+      <div class="card-line line-3"></div>
+    </div>
   </div>
 
   <div class="contact-right">
@@ -1383,9 +1659,22 @@
       <!-- href="#" placeholder — replace with the path to your resume PDF -->
     </div>
 
-     </div><!-- closes contact-right -->
-  </div><!-- closes contact-section -->
-</section><!-- closes #contact -->
+    <!-- Card shine and tile effect layers -->
+    <div class="card-shine"></div>
+    <div class="card-background">
+      <div class="card-tiles">
+        <div class="card-tile tile-1"></div><div class="card-tile tile-2"></div>
+        <div class="card-tile tile-3"></div><div class="card-tile tile-4"></div>
+        <div class="card-tile tile-5"></div><div class="card-tile tile-6"></div>
+        <div class="card-tile tile-7"></div><div class="card-tile tile-8"></div>
+        <div class="card-tile tile-9"></div><div class="card-tile tile-10"></div>
+      </div>
+      <div class="card-line line-1"></div>
+      <div class="card-line line-2"></div>
+      <div class="card-line line-3"></div>
+    </div>
+  </div>
+</section>
 
 
 <!-- ============================================================
@@ -1466,7 +1755,63 @@
   });
 
 
-  // ── PARALLAX MOUSEMOVE ──────────────────────────────────────────────────────
+  // ── CARD SHINE MOUSE TRACKER ───────────────────────────────────────────────
+
+  // Selects all elements that have the card shine effect applied:
+  // project cards, about columns, and contact columns.
+  const shineCards = document.querySelectorAll(
+    '.project-card, .about-left, .about-right, .contact-left, .contact-right'
+  );
+  // querySelectorAll returns a NodeList of all matching elements.
+  // We iterate over all of them so the effect works on every card simultaneously.
+
+  shineCards.forEach(card => {
+    // forEach loops over every card in the NodeList.
+    // 'card' is the current card element in each iteration.
+
+    card.addEventListener('mousemove', (e) => {
+      // 'mousemove' fires whenever the cursor moves inside the card.
+      // (e) is the MouseEvent object with cursor position data.
+
+      const rect = card.getBoundingClientRect();
+      // getBoundingClientRect() returns the card's position and size
+      // relative to the viewport — top, left, width, height, etc.
+
+      const x = e.clientX - rect.left;
+      // e.clientX = cursor's horizontal position from the left edge of the viewport.
+      // Subtracting rect.left gives the cursor position relative to the card's
+      // left edge — so x=0 means the cursor is at the card's left side.
+
+      const y = e.clientY - rect.top;
+      // Same calculation on the vertical axis — y=0 means top of the card.
+
+      const xPercent = (x / rect.width)  * 100;
+      const yPercent = (y / rect.height) * 100;
+      // Converts pixel position to percentage of card dimensions (0–100).
+      // Used to position the conic gradient origin as a percentage,
+      // so the shine always appears at the cursor regardless of card size.
+
+      const shine = card.querySelector('.card-shine');
+      // Finds the .card-shine div inside this specific card.
+
+      if (shine) {
+        shine.style.setProperty('--mouse-x', `${xPercent}%`);
+        shine.style.setProperty('--mouse-y', `${yPercent}%`);
+        // Sets CSS custom properties directly on the shine element.
+        // The ::before gradient uses these values via background-position
+        // to position its center at the cursor location.
+        // This is how the shine "follows" the cursor — JS updates the
+        // variables on every mousemove, CSS reads them immediately.
+        shine.style.backgroundImage = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(10,10,10,0.06) 0%, transparent 60%)`;
+        // Updates the shine's background-image directly with the cursor position.
+        // radial-gradient origin is set to xPercent/yPercent so the glow
+        // appears exactly where the cursor is on the card.
+        // rgba(10,10,10,0.06) = ink at 6% opacity — subtle ink-tinted glow.
+      }
+    });
+  });
+
+
 
   document.addEventListener('mousemove', (e) => {
     // 'mousemove' fires on every cursor movement across the document.
