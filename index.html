@@ -374,31 +374,48 @@
 
   /* ── BUTTONS ── */
 
-  .btn-primary {
-    /* The solid filled black button — used for "VIEW WORK" in the hero
-       and "VISIT SITE" in the featured project card.
-       Solid filled button — ink background, paper text */
-    display: inline-block; /* Allows padding/width to work on an anchor tag */
-    background: var(--ink);   /* UPDATED: ink fill on light background */
-    color: var(--paper);      /* UPDATED: paper text on ink button */
+.btn-primary {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.85rem 2rem;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    /* cubic-bezier(0.16, 1, 0.3, 1) is a custom easing curve —
-       fast acceleration at the start, then slow smooth deceleration */
-  }
+    position: relative;   /* needed so the .slide pseudo-element positions inside it */
+    overflow: hidden;     /* clips the sliding panel so it doesn't show outside the button */
+    transition: color 0.2s;
+}
+ .btn-primary::before {
+    /* The sliding white panel — starts off-screen to the left,
+       slides in on hover using the skewed shape from the CodePen */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -110%;             /* starts fully off-screen to the left */
+    width: 100%;
+    height: 100%;
+    background: var(--paper);
+    transform: skewX(20deg); /* the diagonal skew from the CodePen effect */
+    transition: left 0.2s ease;
+    z-index: 0;              /* behind the text */
+}
 
-  .btn-primary:hover {
-    /* On hover: the solid button inverts — background disappears,
-       text turns ink, and a hairline outline appears */
-    background: transparent;
-    color: var(--ink);               /* UPDATED: ink text on hover */
-    outline: 0.5px solid var(--ink); /* UPDATED: ink outline on hover */
-  }
+.btn-primary:hover::before {
+    left: -10%;              /* slides in to cover most of the button */
+}
+
+.btn-primary:hover {
+    color: var(--ink);       /* text flips to ink as white panel slides in */
+    outline: none;
+}
+
+.btn-primary span {
+    position: relative;
+    z-index: 1;              /* keeps text above the sliding panel */
+}
 
   .btn-ghost {
     /* The underline-only button — used for "GET IN TOUCH ↗" and "GITHUB ↗".
@@ -1033,7 +1050,7 @@
 
     <div class="hero-cta-row" style="margin-top: 2rem;">
       <!-- <div> groups the two buttons and applies flex layout via .hero-cta-row -->
-      <a href="#projects" class="btn-primary">View work</a>
+      <a href="#projects" class="btn-primary"><span>View work</span></a>
       <!-- Anchor styled as a filled button — scrolls to projects section -->
       <a href="#contact" class="btn-ghost" style="margin-left: 1rem;">Get in touch ↗</a>
       <!-- Ghost/text button — ↗ is a unicode diagonal arrow character -->
