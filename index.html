@@ -570,6 +570,8 @@
 
   .skills-section {
     border-bottom: 0.5px solid var(--rule);
+    background: var(--ink);        /* add this */
+    color: var(--paper);           /* add this */
   }
 
   .skills-grid {
@@ -579,10 +581,12 @@
 
   .skill-col {
     padding: 2.5rem;
-    border-right: 0.5px solid var(--rule); /* Vertical rule between columns */
+    border-right: 0.5px solid rgba(240,237,232,0.2);  /* Vertical rule between columns */
   }
 
-  .skill-col:last-child { border-right: none; }
+  .skill-col:last-child { 
+       border-right: none;
+  }
   /* :last-child removes the border from the final column so there's no line at the right edge */
 
   .skill-col-title {
@@ -591,8 +595,8 @@
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mid);
-    margin-bottom: 1.5rem;
+    color: var(--paper);
+    border-bottom: 0.5px solid rgba(240,237,232,0.2);
     padding-bottom: 1rem;
     border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating heading from list */
   }
@@ -970,10 +974,6 @@
 
   <div class="projects-grid">
 
-    <!-- ── FEATURED CARD: VOLNA (spans full width) ── -->
-    <a href="https://volnatrends.com" target="_blank" class="project-card featured">
-    <!-- target="_blank" opens the link in a new tab — good practice for external links -->
-
       <div class="featured-visual">
         <p class="featured-visual-badge">Featured — 2026</p>
         <div class="featured-visual-type">Projects:</div>
@@ -1084,12 +1084,9 @@
      ============================================================ -->
 <section id="skills" class="skills-section">
 
-  <div class="section-banner">
-    <h2 class="section-banner-title">Capabilities</h2>
-    <div class="section-banner-meta">
-      <p>Full-stack + data</p>
-    </div>
-  </div>
+<div class="section-banner" style="justify-content: center;">
+    <h2 class="section-banner-title" style="text-align: center;">Capabilities</h2>
+</div>
 
   <div class="skills-grid">
 
