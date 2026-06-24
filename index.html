@@ -326,7 +326,7 @@
     pointer-events: none;       /* Makes the element unclickable and unselectable — it's purely decorative */
     position: absolute;         /* Removes from normal flow, positioned relative to .hero-right */
     right: 2rem;
-    top: 50%;
+    top: 60%;
     transform: translateY(-50%); /* Shifts the element up by half its own height — perfectly centers it */
     user-select: none;           /* Prevents the text from being highlighted/selected by the user */
   }
@@ -670,7 +670,7 @@
   .skill-col {
     /* Each individual skill column — e.g. the "Languages" column with Python, R, etc. */
     padding: 2.5rem;
-    border-right: 0.5px solid rgba(240,237,232,0.2); /* Vertical hairline rule between columns */
+    border-right: 0.5px solid var(--rule); /* Vertical hairline rule between columns */
   }
 
   .skill-col:last-child {
@@ -685,7 +685,7 @@
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--paper);  /* White text — will need updating to var(--mid) if
+    color: var(--mid);  /* White text — will need updating to var(--mid) if
                              background is changed back to paper */
     border-bottom: 0.5px solid rgba(240,237,232,0.2);
     padding-bottom: 1rem;
@@ -716,15 +716,6 @@
      paragraph and experience timeline.
      Sits directly below the "About me." section-heading band.
      ============================================================ */
-
-  .about-section {
-    /* The two-column content area below the "About me." black header band.
-       Left column (2 parts) holds location. Right column (3 parts) holds
-       the bio paragraph and experience timeline. */
-    display: grid;
-    grid-template-columns: 2fr 3fr; /* Left column is 2 parts, right is 3 parts of available width */
-    border-bottom: 0.5px solid var(--rule); /* Hairline rule closing the section */
-  }
 
   .about-left {
     /* The narrower left column — currently holds just the "Based in / San Diego, CA" info
