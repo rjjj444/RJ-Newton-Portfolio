@@ -212,7 +212,6 @@
     flex-direction: column; /* Stacks children vertically */
     justify-content: flex-end; /* Pushes all content to the bottom of the column —
                                   name and description sit near the bottom edge */
-    border-right: 0.5px solid var(--border-mid); /* Column divider line between left and right */
   }
   .hero-eyebrow {
    /* Small label above the name — called an "eyebrow" in editorial design */
@@ -256,6 +255,8 @@
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
     padding: 3rem 2.5rem;
     position: relative; /* Positioning context for the absolutely-placed vertical "DEV" type */
+    border-left: 0.5px solid var(--border-mid); /* add this */
+    padding-left: 2.5rem; /* add breathing room between line and text */
   }
   .hero-vertical-type {
    /* The large outlined "DEV" text rotated to read top-to-bottom.
