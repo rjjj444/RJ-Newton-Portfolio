@@ -665,7 +665,6 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns.
                                                Equivalent to writing: 1fr 1fr 1fr 1fr */
-    color: var(--mid);
   }
 
   .skill-col {
@@ -717,6 +716,12 @@
      paragraph and experience timeline.
      Sits directly below the "About me." section-heading band.
      ============================================================ */
+  .about-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 40vh;
+    border-bottom: 0.5px solid var(--rule);
+  }
 
   .about-left {
     /* The narrower left column — currently holds just the "Based in / San Diego, CA" info
@@ -729,23 +734,19 @@
     justify-content: space-between; /* Content pinned to bottom via space-between with a single child */
   }
 
-  .about-right {
-    /* The wider right column — holds the bio paragraph and the experience timeline */
+.about-right {
     padding: 3rem 2.5rem;
-    display: grid;
-    grid-template-rows: auto auto; /* Two rows: bio paragraph on top, timeline below */
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
   .about-body {
-    /* The bio paragraph: "I work at the intersection of data engineering..." */
+     /* The bio paragraph: "I work at the intersection of data engineering..." */
     font-size: 15px;
-    line-height: 1.8; /* Generous line height for comfortable body text reading */
-    color: var(--mid); /* Muted gray — secondary text, not primary */
-    max-width: 52ch;   /* Constrains to ~52 characters per line — optimal body text measure */
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    min-height: 40vh; /* Ensures the section has substantial vertical presence on the page */
+    line-height: 1.8;
+    color: var(--mid);
+    max-width: 52ch;
   }
 
   .about-body strong {
@@ -760,19 +761,17 @@
     display: flex;
     flex-direction: column;
     gap: 0; /* No gap between rows — borders handle the visual separation */
-    border-top: 0.5px solid var(--rule); /* Rule separating timeline from bio paragraph above */
   }
 
-  .timeline-item {
-    /* Each individual row in the experience timeline —
+   .timeline-item {
+     /* Each individual row in the experience timeline —
        e.g. "2025 - Present | Fashion Market Intelligence Platform" */
-    padding: 3rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; /* Rows are pushed to the bottom of the column */
+    display: grid;
+    grid-template-columns: 6rem 1fr;
     gap: 1.5rem;
-    border-bottom: 0.5px solid var(--rule); /* Hairline rule below each timeline entry */
-    align-items: baseline; /* Aligns the date and title text along their text baselines */
+    padding: 1.2rem 0;
+    border-bottom: 0.5px solid var(--rule);
+    align-items: baseline;
   }
 
   .timeline-year {
@@ -1082,7 +1081,6 @@
     <!-- ── CARD 01: VOLNA ── -->
     <a href="https://volnatrends.com/" target="_blank" class="project-card">
       <p class="project-index">01</p>
-      <h3 class="project-title">VOLNA</h3>
       <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
       <div class="project-tags">
         <span class="tag">Flask</span>
@@ -1240,67 +1238,78 @@
      ABOUT SECTION
      id="about" is the scroll target for the nav link.
      ============================================================ -->
-<section id="about">
+
+ <section id="about">
   <div class="section-heading">About me.</div>
   <div class="about-section">
 
-  <div class="about-right">
-    <p class="about-body">
-      I work at the intersection of <strong>data engineering</strong>, <strong>machine learning</strong>, and <strong>frontend design</strong>. I'm interested in systems that handle real complexity — not just technically, but in terms of what they reveal to the people using them.<br><br>
-      <!-- <strong> provides semantic emphasis — CSS overrides its color to ink black
+    <div class="about-left">
+      <p class="about-body">
+        I work at the intersection of <strong>data engineering</strong>,
+        <strong>machine learning</strong>, and <strong>frontend design</strong>.
+        I'm interested in systems that handle real complexity — not just
+        technically, but in terms of what they reveal to the people using
+        them.<br><br>
+        Having studied cognitive psychology with an emphasis on data analytics
+        at UC San Diego while building in the data and ML space, I think the
+        most interesting problems sit between disciplines: where behavioral
+        science meets data, where visual design meets systems architecture.
+
+              <!-- <strong> provides semantic emphasis — CSS overrides its color to ink black
            so it stands out from the muted paragraph text -->
-      Having studied cognitive psychology with an emphasis on data analytics at UC San Diego while building in the data and ML space, I think the most interesting problems sit between disciplines: where behavioral science meets data, where visual design meets systems architecture.
-    </p>
+      </p>
+    </div>
 
-    <!-- Experience timeline — each row is a two-column mini-grid: year | title+place -->
-    <div class="about-timeline">
+    <div class="about-right">
+      <div class="about-timeline">
 
-      <div class="timeline-item">
-        <span class="timeline-year">2025 - Present</span>
-        <!-- <span> contains the year — inline element occupying one grid cell -->
-        <div>
-          <p class="timeline-title">Fashion Market Intelligence Platform</p>
-          <p class="timeline-place">Independent software development</p>
+       <!-- Experience timeline — each row is a two-column mini-grid: year | title+place -->
+        <div class="timeline-item">
+          <span class="timeline-year">2025 - Present</span>
+          <!-- <span> contains the year — inline element occupying one grid cell -->
+          <div>
+            <p class="timeline-title">Fashion Market Intelligence Platform</p>
+            <p class="timeline-place">Independent software development</p>
+          </div>
         </div>
-      </div>
 
-      <div class="timeline-item">
-        <span class="timeline-year">2025 - Present</span>
-        <div>
-          <p class="timeline-title">Data Science Research</p>
-          <p class="timeline-place">UC San Diego — cognitive bioacoustics lab</p>
+        <div class="timeline-item">
+          <span class="timeline-year">2025 - Present</span>
+          <div>
+            <p class="timeline-title">Data Science Research</p>
+            <p class="timeline-place">UC San Diego — cognitive bioacoustics lab</p>
+          </div>
         </div>
-      </div>
 
-      <div class="timeline-item">
-        <span class="timeline-year">2025 - 2026</span>
-        <div>
-          <p class="timeline-title">Lead Quantitative Data Analyst</p>
-          <p class="timeline-place">UC San Diego — Research Committee</p>
+        <div class="timeline-item">
+          <span class="timeline-year">2025 - 2026</span>
+          <div>
+            <p class="timeline-title">Lead Quantitative Data Analyst</p>
+            <p class="timeline-place">UC San Diego — Research Committee</p>
+          </div>
         </div>
-      </div>
 
-      <div class="timeline-item">
-        <span class="timeline-year">2024 - Present</span>
-        <div>
-          <p class="timeline-title">Full-Stack Developer</p>
-          <p class="timeline-place">Freelance</p>
+        <div class="timeline-item">
+          <span class="timeline-year">2024 - Present</span>
+          <div>
+            <p class="timeline-title">Full-Stack Developer</p>
+            <p class="timeline-place">Freelance</p>
+          </div>
         </div>
-      </div>
 
-      <div class="timeline-item">
-        <span class="timeline-year">2024 - 2026</span>
-        <div>
-          <p class="timeline-title">B.S. — Cognitive Psychology</p>
-          <p class="timeline-place">University of California San Diego</p>
+        <div class="timeline-item">
+          <span class="timeline-year">2024 - 2026</span>
+          <div>
+            <p class="timeline-title">B.S. — Cognitive Psychology</p>
+            <p class="timeline-place">University of California San Diego</p>
+          </div>
         </div>
-      </div>
 
-     </div><!-- closes about-timeline -->
-    </div><!-- closes about-right -->
-  </div><!-- closes about-section -->
-</section><!-- closes #about -->
+      </div> <!-- closes about-timeline -->
+    </div> <!-- closes about-right -->
 
+  </div> <!-- closes about-section -->
+</section> <!-- closes #about -->
 
 <!-- ============================================================
      CONTACT SECTION
