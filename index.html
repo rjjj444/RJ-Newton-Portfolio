@@ -2,53 +2,53 @@
 <!-- DOCTYPE tells the browser this is an HTML5 document — always the first line -->
 
 <html lang="en">
- <!-- <html> is the root element wrapping the entire page. lang="en" declares the language
+<!-- <html> is the root element wrapping the entire page. lang="en" declares the language
      for screen readers and search engines -->
- 
+
 <head>
- <!-- <head> contains metadata and resources that load before the page renders —
+<!-- <head> contains metadata and resources that load before the page renders —
      nothing inside here is visible to the user directly -->
- 
+
 <meta charset="UTF-8">
-   <!-- Declares character encoding. UTF-8 supports all unicode characters (emojis,
+  <!-- Declares character encoding. UTF-8 supports all unicode characters (emojis,
        accented letters, special symbols). Without this, non-ASCII characters may
        display as garbled text -->
- 
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <!-- Critical for mobile responsiveness. Tells the browser:
+  <!-- Critical for mobile responsiveness. Tells the browser:
        width=device-width — match the viewport to the device's actual screen width
        initial-scale=1.0 — don't zoom in or out on load
        Without this, mobile browsers default to rendering at desktop width and zooming out -->
- 
-<title>Portfolio</title>
-   <!-- Text shown in the browser tab and used by search engines as the page title -->
+
+<title>RJ Newton — Dev Portfolio</title>
+  <!-- Text shown in the browser tab and used by search engines as the page title -->
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-   <!-- Loads two typefaces from Google Fonts over the network:
+  <!-- Loads two typefaces from Google Fonts over the network:
        Space Grotesk — the display/body font, loaded in weights 300, 400, 500, 700
        Space Mono — the monospace font used for labels/nav, loaded in 400 and 700
        display=swap — tells the browser to show fallback text immediately, then swap in
        the custom font once it loads (prevents invisible text during load) -->
- 
+
 <style>
- /* ============================================================
-   RESET & ROOT
-   A reset strips browser default styles so we start from a
-   consistent baseline across all browsers.
-   ============================================================ */
- 
+  /* ============================================================
+     RESET & ROOT
+     A reset strips browser default styles so we start from a
+     consistent baseline across all browsers.
+     ============================================================ */
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   /* Universal reset applied to every element and its ::before / ::after pseudo-elements:
      box-sizing: border-box — padding and border are included inside the declared width/height,
        not added on top. Makes layout math far more predictable.
      margin: 0; padding: 0 — removes all default browser spacing (e.g. <h1> top margin,
        <ul> left padding) so we control all spacing explicitly */
- 
+
   :root {
-       /* :root targets the <html> element — the highest scope for CSS custom properties
+    /* :root targets the <html> element — the highest scope for CSS custom properties
        (also called CSS variables). Variables defined here are available everywhere on the page.
        Using variables means one change here propagates everywhere they're used. */
-   
+
     --ink: #0a0a0a;                             /* Near-black for text and primary surfaces */
     --paper: #f5f3ef;                           /* Warm off-white page background — avoids harsh pure white */
     --mid: #8a8a8a;                             /* Medium gray for secondary/muted text */
@@ -57,16 +57,17 @@
     --serif-disp: 'Space Grotesk', sans-serif;  /* Primary typeface variable */
     --mono: 'Space Mono', monospace;            /* Monospace typeface variable */
 
-    /* Hero dark-mode tokens — mirrors modeling site palette for the photo hero */
-    --chalk:       #f0ede8;
-    --chalk-dim:   #d8d5d0;
-    --chalk-ghost: #a8a5a0;
-    --black:       #000000;
-    --border-mid:  rgba(240,237,232,0.2);
+    /* Hero tokens — now used on a light paper background so we use ink colors,
+       not chalk. Chalk variables kept below in case they're needed elsewhere. */
+    --chalk:       #f0ede8;                     /* Warm white — kept for reference */
+    --chalk-dim:   #d8d5d0;                     /* Slightly dimmer white — kept for reference */
+    --chalk-ghost: #a8a5a0;                     /* Muted gray — kept for reference */
+    --border-mid:  rgba(10,10,10,0.12);         /* UPDATED: now a semi-transparent ink rule
+                                                   to show up on the light paper background */
   }
 
   html { scroll-behavior: smooth; }
-   /* Makes anchor-link navigation (e.g. clicking <a href="#projects">) animate
+  /* Makes anchor-link navigation (e.g. clicking <a href="#projects">) animate
      smoothly instead of jumping instantly to the target section */
 
   body {
@@ -75,296 +76,314 @@
     font-family: var(--serif-disp);   /* Default typeface — all elements inherit this unless overridden */
     font-size: 15px;                  /* Base font size — rem units throughout the file are relative to this */
     line-height: 1.6;                 /* 1.6× the font size between lines — improves readability */
-    overflow-x: hidden;                /* Prevents horizontal scrollbar if any element accidentally overflows
-                                       the viewport width (common with large decorative type) */
+    overflow-x: hidden;               /* Prevents horizontal scrollbar if any element accidentally overflows
+                                         the viewport width (common with large decorative type) */
   }
 
-  /* NAV — transparent over hero, becomes solid on scroll */
+  /* ============================================================
+     NAVIGATION
+     Fixed bar that stays at the top of the viewport as you scroll.
+     Starts solid (paper background) immediately since the hero
+     is now light — no need for a transparent-to-solid transition.
+     ============================================================ */
 
- /* ============================================================
-   NAVIGATION
-   Fixed bar that stays at the top of the viewport as you scroll
-   ============================================================ */
   nav {
-    position: fixed;                                           /* Removes the nav from normal document flow and pins it to the viewport —
-                              it stays visible regardless of scroll position */
-    top: 0; left: 0; right: 0;                                  /* Stretches the nav edge-to-edge across the top */
-    z-index: 200;                                               /* Stacking order — higher values render on top. 100 ensures the nav
-                              sits above all page content which has default z-index of 0 */
-    display: flex;                                              /* Flexbox layout — children (logo and links) sit side by side */
-    justify-content: space-between;                             /* The CSS justify-content property aligns and distributes space between items along the main axis of a flex or grid container. 
-                                    It only works when applied to a parent element that has display: flex or display: grid enabled
-                                    flex-start (Default): Packs items tightly against the start of the container.
-                                    flex-end: Packs items tightly against the end of the container.
-                                    center: Groups all items tightly together in the exact middle.
-                                    space-between: Spreads items evenly, forcing the first and last items flush against the outer edges.
-                                    space-around: Spreads items evenly, leaving a half-size space on both outer edges.
-                                    space-evenly: Spreads items evenly, keeping identical full-size spaces between every item and the edges.
-                                    Pushes logo to far left, links to far right */
-    align-items: center;                                        /* Vertically centers logo and links within the nav bar */
-    padding: 1.2rem 2.5rem;                                     /* 1.2rem top/bottom, 2.5rem left/right breathing room */
-    border-bottom: 0.5px solid transparent;                     /* Hairline separator between nav and page content */
-    background: transparent;                                   
-    transition: background 0.4s ease, border-color 0.4s ease;   
+    position: fixed;                        /* Removes the nav from normal document flow and pins it to the viewport —
+                                               it stays visible regardless of scroll position */
+    top: 0; left: 0; right: 0;             /* Stretches the nav edge-to-edge across the top */
+    z-index: 200;                           /* Stacking order — higher values render on top. 200 ensures the nav
+                                               sits above all page content */
+    display: flex;                          /* Flexbox layout — children (logo and links) sit side by side */
+    justify-content: space-between;         /* The CSS justify-content property aligns and distributes space between items along the main axis of a flex or grid container.
+                                               It only works when applied to a parent element that has display: flex or display: grid enabled.
+                                               flex-start (Default): Packs items tightly against the start of the container.
+                                               flex-end: Packs items tightly against the end of the container.
+                                               center: Groups all items tightly together in the exact middle.
+                                               space-between: Spreads items evenly, forcing the first and last items flush against the outer edges.
+                                               space-around: Spreads items evenly, leaving a half-size space on both outer edges.
+                                               space-evenly: Spreads items evenly, keeping identical full-size spaces between every item and the edges.
+                                               Pushes logo to far left, links to far right */
+    align-items: center;                    /* Vertically centers logo and links within the nav bar */
+    padding: 1.2rem 2.5rem;                 /* 1.2rem top/bottom, 2.5rem left/right breathing room */
+    border-bottom: 0.5px solid var(--rule); /* Hairline separator between nav and page content — visible immediately */
+    background: var(--paper);              /* UPDATED: solid paper background from the start —
+                                               hero is now light so no transparent phase needed */
+    transition: background 0.4s ease, border-color 0.4s ease;
   }
-  /* JS adds this class once user scrolls past the hero */
+
+  /* JS adds this class once user scrolls past the hero — kept for compatibility
+     but visually identical to the base state since both use --paper */
   nav.scrolled {
     background: var(--paper);
     border-bottom-color: var(--rule);
   }
+
   .nav-logo {
     font-family: var(--mono);    /* Using the variable "mono" we created earlier to apply Monospace font for the logo wordmark */
     font-size: 12px;
     letter-spacing: 0.12em;      /* Wide tracking — 0.12em = 12% of the font size between each letter */
     text-transform: uppercase;   /* Forces all characters to uppercase regardless of HTML content */
-    color: var(--chalk);
+    color: var(--ink);           /* UPDATED: ink black — readable on the light paper background */
     transition: color 0.4s ease;
   }
+
   nav.scrolled .nav-logo { color: var(--ink); }
+
   .nav-links {
     display: flex;    /* Links sit horizontally in a row */
     gap: 2.5rem;      /* Space between each nav item */
     list-style: none; /* Removes the default bullet points from the <ul> */
   }
+
   .nav-links a {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-decoration: none;      /* Removes the default underline on anchor tags */
-    color: var(--chalk-ghost);
-    transition: color 0.15s;    /* Animates the color property over 0.15 seconds on state change */
+    text-decoration: none;   /* Removes the default underline on anchor tags */
+    color: var(--mid);       /* UPDATED: muted gray — readable on light background */
+    transition: color 0.15s; /* Animates the color property over 0.15 seconds on state change */
   }
+
   nav.scrolled .nav-links a { color: var(--mid); }
-  .nav-links a:hover { color: var(--chalk) !important; }   /* :hover is a pseudo-class that applies styles when the cursor is over the element.
-                                                           On hover, link text shifts from muted gray to full ink black */
+
+  .nav-links a:hover { color: var(--ink) !important; }
+  /* :hover is a pseudo-class that applies styles when the cursor is over the element.
+     UPDATED: hover shifts to full ink black (not chalk white) since background is now light.
+     !important ensures this wins over any other color rules. */
+
   nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
 
-/* ============================================================
-   HERO BACKGROUND COMPOSITING LAYERS
-   Full-viewport landing area split into two equal columns.
-   Inspired by the Balenciaga campaign: large structural type,
-   white space as a compositional element, stark contrast.
-   ============================================================ */
- 
-  /* Fixed canvas that sits behind the hero content */
-  .hero-bg-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    /* Hidden once user scrolls past hero — JS toggles this */
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-  }
-  .hero-bg-layer.hidden { opacity: 50; }
 
-  /* The actual photo — starts transparent, fades in once loaded */
- .hero-bg-image {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end; /* pins the image to the bottom of the hero */
-  justify-content: center;
-  pointer-events: none;
-}
+  /* ============================================================
+     HERO BACKGROUND — PORTRAIT IMAGE
+     The photo is now an <img> tag inside a positioned container
+     rather than a CSS background-image. This gives us control
+     over the figure's size and keeps the full body in frame.
+     The image's existing white background blends with --paper.
+     ============================================================ */
 
-.hero-bg-image img {
-  height: 90vh;        /* controls how tall the figure is — adjust this */
-  width: auto;         /* maintains the image's natural aspect ratio */
-  object-fit: contain;
-  opacity: 0;
-  transition: opacity 2s ease;
-}
-
-.hero-bg-image.loaded img { opacity: 1; }
-  .hero-bg-image.loaded { opacity: 1.0; }
-
-  /* Dark gradient overlay — heavier at top and bottom for text legibility */
-  .hero-bg-gradient {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(10,10,10,0.60) 0%,
-      rgba(10,10,10,0.20) 35%,
-      rgba(10,10,10,0.40) 65%,
-      rgba(10,10,10,0.95) 100%
-    );
+  .hero-bg-image {
+    /* Container div for the portrait <img>.
+       position: absolute fills the hero section (which is position: relative).
+       Flexbox pins the image to the bottom so feet-to-head is always visible. */
+    position: absolute;
+    inset: 0;                  /* Fills the entire hero section */
+    display: flex;
+    align-items: flex-end;     /* Pins the <img> to the bottom edge of the hero */
+    justify-content: center;   /* Horizontally centers the figure */
+    pointer-events: none;      /* Decorative — clicks pass through to content above */
+    z-index: 0;                /* Behind hero text content (hero-left/right sit above) */
   }
 
-  /* SVG procedural film grain overlay for texture */
-  .hero-bg-grain {
-    position: absolute; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
-    opacity: 0.60;
-    mix-blend-mode: overlay;
+  .hero-bg-image img {
+    /* The actual portrait photo.
+       height: 90vh scales the figure to 90% of the viewport height —
+       increase to show more of the figure, decrease to show less.
+       width: auto maintains the natural aspect ratio with no distortion. */
+    height: 90vh;
+    width: auto;
+    object-fit: contain;       /* No cropping — the full figure is always visible */
+    opacity: 0;                /* Starts invisible — fades in once the image has loaded */
+    transition: opacity 2s ease; /* 2-second fade-in triggered when .loaded is added by JS */
   }
 
-  /* ── HERO SECTION ── */
+  .hero-bg-image.loaded img { opacity: 1; }
+  /* JS adds .loaded to the wrapper div once the <img> has fully downloaded.
+     opacity: 1 — full opacity. The image's white background blends seamlessly
+     with the --paper page background behind it. */
+
+
+  /* ============================================================
+     HERO SECTION
+     Full-viewport landing area split into two columns.
+     position: relative establishes the positioning context for
+     the absolutely-placed .hero-bg-image inside it.
+     ============================================================ */
+
   .hero {
-    padding-top: 80px; /* Offsets the fixed nav so content doesn't hide behind it.
-                             80px ≈ the nav's height */
-    min-height: 100vh; /* vh = viewport height units. 100vh = the full visible screen height.
-                             min-height allows it to grow taller if content needs it */
+    padding-top: 80px;              /* Offsets the fixed nav so content doesn't hide behind it.
+                                       80px ≈ the nav's height */
+    min-height: 100vh;              /* vh = viewport height units. 100vh = the full visible screen height.
+                                       min-height allows it to grow taller if content needs it */
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Two equal-width columns. 1fr = one fraction of available space */
-    position: relative; /* Establishes a positioning context for absolutely-positioned children
-                             (the vertical "DEV" type) */
-    z-index: 10; /* Sits above the fixed bg layers */
-    border-bottom: 0.5px solid var(--border-mid); /* Hairline rule separating hero from next section */ 
-    overflow: hidden; /* Clips any decorative type that extends beyond the section boundary */
-    background: var(--paper);
+    grid-template-columns: 2fr 1fr; /* Left column is wider (2 parts), right is narrower (1 part).
+                                       This shifts the column divider line to the right third. */
+    position: relative;             /* Establishes a positioning context for the absolutely-positioned
+                                       .hero-bg-image and the vertical "DEV" type */
+    z-index: 10;                    /* Sits above any other fixed layers */
+    border-bottom: 0.5px solid var(--rule); /* Hairline rule separating hero from next section */
+    overflow: hidden;               /* Clips any decorative type that extends beyond the section boundary */
+    background: var(--paper);       /* Explicit paper background — ensures image's white bg blends in */
   }
 
-  /* Left column — chalk text on dark background */
+  /* Left column — ink text on light paper background */
   .hero-left {
     padding: 3rem 2.5rem 3rem;
     display: flex;
     flex-direction: column; /* Stacks children vertically */
     justify-content: flex-end; /* Pushes all content to the bottom of the column —
                                   name and description sit near the bottom edge */
+    position: relative;     /* Ensures text sits above the bg image (z-index stacking) */
+    z-index: 2;             /* Above the hero-bg-image (z-index: 0) */
   }
+
   .hero-eyebrow {
-   /* Small label above the name — called an "eyebrow" in editorial design */
-   
+    /* Small label above the name — called an "eyebrow" in editorial design */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--chalk);
+    color: var(--mid);       /* UPDATED: muted gray — readable on light background */
     margin-bottom: 1.5rem;
   }
+
   .hero-name {
-   /* clamp(min, preferred, max) — responsive font sizing without media queries:
+    /* clamp(min, preferred, max) — responsive font sizing without media queries:
        - Never smaller than 3.5rem
        - Ideally 7vw (7% of viewport width) — scales with screen size
        - Never larger than 6rem
        This is the key technique for display type that adapts fluidly */
-   
     font-size: clamp(3.5rem, 7vw, 6rem);
     font-weight: 700;
-    line-height: 0.92; /* Tighter than 1 — pulls lines of the name closer together.
-                               Intentional in display type; would be unreadable at body sizes */
-    letter-spacing: -0.03em; /* Negative tracking — tightens letter spacing on large type.
-                                Large fonts look better with letters pulled slightly closer */
+    line-height: 0.92;        /* Tighter than 1 — pulls lines of the name closer together.
+                                 Intentional in display type; would be unreadable at body sizes */
+    letter-spacing: -0.03em;  /* Negative tracking — tightens letter spacing on large type.
+                                 Large fonts look better with letters pulled slightly closer */
     margin-bottom: 2rem;
-    color: var(--chalk);
+    color: var(--ink);        /* UPDATED: full ink black on the light background */
   }
+
   .hero-desc {
     font-size: 14px;
-    color: var(--chalk);
-    max-width: 28ch; /* ch units = width of the "0" character. 28ch ≈ 28 characters per line.
-                         Constrains line length for comfortable reading (optimal is ~60ch for body,
-                         shorter for display captions) */
+    color: var(--mid);        /* UPDATED: muted gray for secondary copy on light background */
+    max-width: 28ch;          /* ch units = width of the "0" character. 28ch ≈ 28 characters per line.
+                                 Constrains line length for comfortable reading (optimal is ~60ch for body,
+                                 shorter for display captions) */
     line-height: 1.7;
-    border-top: 0.5px solid var(--border-mid); /* Visual separator above the description paragraph */
+    border-top: 0.5px solid var(--rule); /* UPDATED: uses --rule (visible on light bg) instead of --border-mid */
     padding-top: 1.5rem;
   }
+
   .hero-right {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
     padding: 3rem 2.5rem;
-    position: relative; /* Positioning context for the absolutely-placed vertical "DEV" type */
-    border-left: 0.5px solid var(--border-mid); 
-    padding-left: 2.5rem; /* add breathing room between line and text */
+    position: relative;      /* Positioning context for the absolutely-placed vertical "DEV" type */
+    z-index: 2;              /* Above the hero-bg-image */
+    border-left: 0.5px solid var(--rule); /* UPDATED: --rule instead of --border-mid — visible on light bg */
+    padding-left: 2.5rem;    /* Breathing room between the border line and the stat text */
   }
+
   .hero-vertical-type {
-   /* The large outlined "DEV" text rotated to read top-to-bottom.
+    /* The large outlined "DEV" text rotated to read top-to-bottom.
        Borrowed directly from the Balenciaga vertical brand treatment */
-   
-    writing-mode: vertical-rl; /* Rotates text direction — rl = right-to-left flow,
-                                     which combined with the default stacking order makes text
-                                     read top-to-bottom */
-    text-orientation: mixed; /* Keeps latin characters upright within the vertical flow */
+    writing-mode: vertical-rl;  /* Rotates text direction — rl = right-to-left flow,
+                                    which combined with the default stacking order makes text
+                                    read top-to-bottom */
+    text-orientation: mixed;    /* Keeps latin characters upright within the vertical flow */
     font-size: clamp(5rem, 12vw, 10rem); /* Fluid sizing — scales with viewport width */
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 0.88;
-    color: transparent; /* Makes the fill invisible — only the stroke shows */
-    -webkit-text-stroke: 1.5px rgba(240,237,232,0.25); /* Draws an outline around each letter instead of filling it.
-                                               -webkit- prefix required for broad browser support.
-                                               Creates the "ghost type" editorial effect */
-    pointer-events: none; /* Makes the element unclickable and unselectable — it's purely decorative */
-    position: absolute; /* Removes from normal flow, positioned relative to .hero-right */
+    color: transparent;         /* Makes the fill invisible — only the stroke shows */
+    -webkit-text-stroke: 1.5px rgba(10,10,10,0.12);
+    /* UPDATED: dark ink outline at low opacity — visible on light background.
+       -webkit- prefix required for broad browser support.
+       Creates the "ghost type" editorial effect */
+    pointer-events: none;       /* Makes the element unclickable and unselectable — it's purely decorative */
+    position: absolute;         /* Removes from normal flow, positioned relative to .hero-right */
     right: 2rem;
     top: 50%;
     transform: translateY(-50%); /* Shifts the element up by half its own height — perfectly centers it */
-    user-select: none; /* Prevents the text from being highlighted/selected by the user */
+    user-select: none;           /* Prevents the text from being highlighted/selected by the user */
   }
-  .hero-stats { 
-   display: flex;
-   flex-direction: column; 
-   gap: 1.5rem; /* Space between each stat item */
-   margin-left: auto; 
+
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;     /* Space between each stat item */
+    margin-left: auto; /* Pushes the stats block to the right side of the column */
   }
+
   .hero-stat {
-    border-top: 0.5px solid var(--border-mid); /* Each stat separated by a thin horizontal rule */
+    border-top: 0.5px solid var(--rule); /* UPDATED: --rule — visible on light background */
     padding-top: 1rem;
   }
+
   .hero-stat-num {
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1;
-    color: var(--chalk);
+    color: var(--ink);  /* UPDATED: ink black — readable on light background */
   }
+
   .hero-stat-label {
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--chalk);
-    margin-top: 4px; /* Small gap between number and label */
-  }
-  .hero-cta-row { 
-   /* Wrapper for the two call-to-action buttons */
-   display: flex; 
-   gap: 1rem; align-items: center; 
+    color: var(--mid);  /* UPDATED: muted gray for labels on light background */
+    margin-top: 4px;    /* Small gap between number and label */
   }
 
-  /* Buttons */
- 
+  .hero-cta-row {
+    /* Wrapper for the two call-to-action buttons */
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* ── BUTTONS ── */
+
   .btn-primary {
-   /* Solid filled button — inverted colors (ink background, paper text) */
+    /* Solid filled button — ink background, paper text */
     display: inline-block; /* Allows padding/width to work on an anchor tag */
-    background: var(--chalk);
-    color: var(--black);
+    background: var(--ink);   /* UPDATED: ink fill on light background */
+    color: var(--paper);      /* UPDATED: paper text on ink button */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.85rem 2rem;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth fade on hover */
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* cubic-bezier(0.16, 1, 0.3, 1) is a custom easing curve —
+       fast acceleration at the start, then slow smooth deceleration */
   }
+
   .btn-primary:hover {
     background: transparent;
-    color: var(--black);
-    outline: 0.5px solid var(--chalk);
+    color: var(--ink);              /* UPDATED: ink text on hover */
+    outline: 0.5px solid var(--ink); /* UPDATED: ink outline on hover */
   }
+
   .btn-ghost {
-   /* Underline-only button — no background fill, text with bottom border */
+    /* Underline-only button — no background fill, text with bottom border */
     display: inline-block;
-    color: var(--chalk);
+    color: var(--ink);        /* UPDATED: ink text on light background */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.85rem 0; /* Padding top/bottom but not sides — border-bottom aligns to text */
     text-decoration: none;
-    border-bottom: 0.5px solid var(--chalk-ghost);
+    border-bottom: 0.5px solid var(--mid); /* UPDATED: mid gray underline on light background */
     transition: color 0.15s, border-color 0.15s;
   }
-  .btn-ghost:hover { border-color: var(--chalk); }
 
- /* ============================================================
-   SECTION BANNER — Mingyu magazine banner style 
-  
-   The title row at the top of each section — large flush-left
-   heading with small right-aligned metadata. Directly mirrors
-   the Mingyu magazine banner treatment.
-   ============================================================ */
+  .btn-ghost:hover { border-color: var(--ink); } /* Underline darkens to full ink on hover */
+
+
+  /* ============================================================
+     SECTION BANNER — Mingyu magazine banner style
+
+     The title row at the top of each section — large flush-left
+     heading with small right-aligned metadata. Directly mirrors
+     the Mingyu magazine banner treatment.
+     ============================================================ */
 
   .section-banner {
     display: flex;
@@ -374,14 +393,16 @@
     padding: 1.5rem 2.5rem;
     border-bottom: 0.5px solid var(--rule);
   }
+
   .section-banner-title {
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1;
   }
+
   .section-banner-meta {
-   /* Small right-aligned label group (e.g. "2023 — 2026 / 6 projects") */
+    /* Small right-aligned label group (e.g. "2023 — 2026 / 6 projects") */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -390,41 +411,51 @@
     text-align: right;
   }
 
-/* ============================================================
-   PROJECTS GRID
-   Two-column editorial grid. Each card is a full anchor tag
-   so the entire card is clickable. Inspired by the Marni
-   editorial spread's multi-column layout.
-   ============================================================ */
- 
+
+  /* ============================================================
+     PROJECTS GRID
+     Two-column editorial grid. Each card is a full anchor tag
+     so the entire card is clickable. Inspired by the Marni
+     editorial spread's multi-column layout.
+     ============================================================ */
+
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal columns */
   }
+
   .project-card {
     border-right: 0.5px solid var(--rule);
     border-bottom: 0.5px solid var(--rule); /* Cards separated by hairline rules, not gaps */
     padding: 2.5rem;
     text-decoration: none; /* Removes default underline on the <a> tag wrapping each card */
-    color: inherit; /* Inherits text color from parent instead of showing default link blue */
-    display: block; /* <a> is inline by default; block makes it fill its grid cell */
+    color: inherit;         /* Inherits text color from parent instead of showing default link blue */
+    display: block;         /* <a> is inline by default; block makes it fill its grid cell */
     transition: background 0.2s;
-    position: relative; /* Positioning context for the absolute-placed arrow icon */
+    position: relative;     /* Positioning context for the absolute-placed arrow icon */
     overflow: hidden;
   }
-  .project-card:nth-child(even) { border-right: none; }  /* :nth-child(even) targets every 2nd card (the right column).
-                                                         Removes its right border so we don't double up borders at the grid edge */
-  .project-card:hover { background: rgba(10,10,10,0.03); }  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity */
-  .project-card:hover .project-arrow { transform: translate(4px, -4px); }  /* On card hover, the arrow moves 4px right and 4px up — a micro-interaction
-                                                                           that suggests "go to this link" without being loud */
+
+  .project-card:nth-child(even) { border-right: none; }
+  /* :nth-child(even) targets every 2nd card (the right column).
+     Removes its right border so we don't double up borders at the grid edge */
+
+  .project-card:hover { background: rgba(10,10,10,0.03); }
+  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity */
+
+  .project-card:hover .project-arrow { transform: translate(4px, -4px); }
+  /* On card hover, the arrow moves 4px right and 4px up — a micro-interaction
+     that suggests "go to this link" without being loud */
+
   .project-index {
-   /* Small numbered label at top of card, e.g. "02" */
+    /* Small numbered label at top of card, e.g. "02" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
     color: var(--mid);
     margin-bottom: 2rem;
   }
+
   .project-title {
     font-size: clamp(1.4rem, 3vw, 2.2rem);
     font-weight: 700;
@@ -432,15 +463,17 @@
     line-height: 1.05;
     margin-bottom: 1rem;
   }
+
   .project-tags {
-   /* Flex container for the technology pill tags */
+    /* Flex container for the technology pill tags */
     display: flex;
     flex-wrap: wrap; /* Tags wrap to a new line if they exceed container width */
     gap: 6px;
     margin-bottom: 1.5rem;
   }
+
   .tag {
-   /* Individual technology tags — borderless pill badges */
+    /* Individual technology tags — borderless pill badges */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
@@ -449,14 +482,16 @@
     padding: 3px 8px;
     color: var(--mid);
   }
+
   .project-desc {
     font-size: 13px;
     color: var(--mid);
     line-height: 1.7;
     max-width: 38ch;
   }
+
   .project-arrow {
-   /* Diagonal arrow icon anchored to the bottom-right of each card */
+    /* Diagonal arrow icon anchored to the bottom-right of each card */
     position: absolute; /* Positioned relative to the card's position: relative */
     bottom: 2.5rem;
     right: 2.5rem;
@@ -464,14 +499,15 @@
     transition: transform 0.2s; /* Smooth movement on hover (triggered by card:hover rule above) */
   }
 
- /* ============================================================
-   FEATURED PROJECT CARD — full-width Marni editorial
-   The first/hero project card spans the full grid width —
-   like a double-page spread in the Marni editorial. It has
-   its own internal two-column layout: black visual panel
-   on the left, content on the right.
-   ============================================================ */
- 
+
+  /* ============================================================
+     FEATURED PROJECT CARD — full-width Marni editorial
+     The first/hero project card spans the full grid width —
+     like a double-page spread in the Marni editorial. It has
+     its own internal two-column layout: black visual panel
+     on the left, content on the right.
+     ============================================================ */
+
   .project-card.featured {
     grid-column: 1 / -1; /* Spans from column line 1 to -1 (the last line) — full width */
     border-right: none;
@@ -480,6 +516,7 @@
     gap: 0;
     padding: 0; /* Padding is handled by each internal child instead */
   }
+
   .featured-visual {
     /* The black visual panel on the left side of the featured card */
     background: var(--ink);
@@ -490,8 +527,9 @@
     position: relative;
     overflow: hidden;
   }
+
   .featured-visual-type {
-   /* The large ghost display type inside the black panel ("DATA LAKE") */
+    /* The large ghost display type inside the black panel ("DATA LAKE") */
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 700;
     color: transparent;
@@ -501,6 +539,7 @@
     user-select: none;
     padding: 2rem;
   }
+
   .featured-visual-badge {
     /* "Featured — 2026" label pinned to the top-left of the black panel */
     position: absolute;
@@ -511,6 +550,7 @@
     text-transform: uppercase;
     color: rgba(245,243,239,0.5); /* Semi-transparent paper color on dark background */
   }
+
   .featured-content {
     /* Right panel of the featured card — project info */
     padding: 3rem;
@@ -520,25 +560,30 @@
     border-left: 0.5px solid var(--rule);
   }
 
- /* ============================================================
-   SKILLS SECTION — dense editorial columns
-   Four equal columns — one per skill category. Dense editorial
-   typographic columns like a magazine's credits page.
-   ============================================================ */
- 
+
+  /* ============================================================
+     SKILLS SECTION — dense editorial columns
+     Four equal columns — one per skill category. Dense editorial
+     typographic columns like a magazine's credits page.
+     ============================================================ */
+
   .skills-section {
     border-bottom: 0.5px solid var(--rule);
   }
+
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns. Equivalent to writing 1fr 1fr 1fr 1fr */
   }
+
   .skill-col {
     padding: 2.5rem;
     border-right: 0.5px solid var(--rule); /* Vertical rule between columns */
   }
-  .skill-col:last-child { border-right: none; } /* :last-child removes the border from the final column so there's no line at the right edge */
- 
+
+  .skill-col:last-child { border-right: none; }
+  /* :last-child removes the border from the final column so there's no line at the right edge */
+
   .skill-col-title {
     /* Category heading inside each skill column, e.g. "Languages" */
     font-family: var(--mono);
@@ -550,31 +595,35 @@
     padding-bottom: 1rem;
     border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating heading from list */
   }
+
   .skill-list {
     list-style: none; /* Removes default bullet points */
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
   }
+
   .skill-list li {
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
   }
 
- /* ============================================================
-   ABOUT SECTION — asymmetric two-column Marni spread 
-   Asymmetric 2:3 column split — narrower left column holds
-   the large display heading and location, wider right column
-   holds the body paragraph and timeline. Mirrors the Marni
-   spread's unequal column structure.
-   ============================================================ */
- 
+
+  /* ============================================================
+     ABOUT SECTION — asymmetric two-column Marni spread
+     Asymmetric 2:3 column split — narrower left column holds
+     the large display heading and location, wider right column
+     holds the body paragraph and timeline. Mirrors the Marni
+     spread's unequal column structure.
+     ============================================================ */
+
   .about-section {
     display: grid;
     grid-template-columns: 2fr 3fr; /* Left column is 2 parts, right is 3 parts of available width */
     border-bottom: 0.5px solid var(--rule);
   }
+
   .about-left {
     padding: 3rem 2.5rem;
     border-right: 0.5px solid var(--rule);
@@ -582,38 +631,44 @@
     flex-direction: column;
     justify-content: space-between; /* "About me." at top, location info pinned to bottom */
   }
+
   .about-big-text {
-   /* The large "About me." display heading */
+    /* The large "About me." display heading */
     font-size: clamp(3rem, 7vw, 5.5rem);
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 0.9; /* Tightly stacked — "About" and "me." overlap vertically */
   }
+
   .about-right {
     padding: 3rem 2.5rem;
     display: grid;
     grid-template-rows: auto auto; /* Two rows: body paragraph, then timeline */
     gap: 2rem;
   }
+
   .about-body {
     font-size: 15px;
     line-height: 1.8; /* Generous line height for readable body text */
-    color: var(--mid); /* Overrides the muted gray so bolded terms pop to full black */
+    color: var(--mid);
     max-width: 52ch; /* Constrains line length to ~52 characters for comfortable reading */
   }
+
   .about-body strong {
     /* Inline emphasis within the body paragraph */
-    color: var(--ink);
+    color: var(--ink); /* Overrides the muted gray so bolded terms pop to full black */
     font-weight: 500;
   }
+
   .about-timeline {
     display: flex;
     flex-direction: column;
     gap: 0;
     border-top: 0.5px solid var(--rule);
   }
+
   .timeline-item {
-   /* Each entry in the experience timeline */
+    /* Each entry in the experience timeline */
     display: grid;
     grid-template-columns: 6rem 1fr; /* Fixed 6rem year column, flexible content column */
     gap: 1.5rem;
@@ -621,34 +676,39 @@
     border-bottom: 0.5px solid var(--rule); /* Rule between each timeline entry */
     align-items: baseline; /* Aligns the year and title text along their baselines */
   }
+
   .timeline-year {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.08em;
     color: var(--mid);
   }
+
   .timeline-title {
     font-size: 14px;
     font-weight: 500;
   }
+
   .timeline-place {
     font-size: 12px;
     color: var(--mid);
     margin-top: 2px;
   }
 
-/* ============================================================
-   CONTACT SECTION
-   Two-column layout: large display headline on the left,
-   link rows on the right. Right column uses flex-end so
-   the links stack from the bottom up.
-   ============================================================ */
- 
+
+  /* ============================================================
+     CONTACT SECTION
+     Two-column layout: large display headline on the left,
+     link rows on the right. Right column uses flex-end so
+     the links stack from the bottom up.
+     ============================================================ */
+
   .contact-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 40vh; /* Ensures the section has substantial vertical presence */
   }
+
   .contact-left {
     padding: 3rem 2.5rem;
     border-right: 0.5px solid var(--rule);
@@ -656,39 +716,44 @@
     flex-direction: column;
     justify-content: space-between;
   }
+
   .contact-headline {
-   /* The large "Get in touch." stacked heading */
+    /* The large "Get in touch." stacked heading */
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 0.95; /* Tight stacking for multi-line display heading */
   }
+
   .contact-right {
-   /* Contact links sit at the bottom of the column */
+    /* Contact links sit at the bottom of the column */
     padding: 3rem 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 1.5rem;
   }
+
   .contact-link-row {
-   /* Each contact method (email, GitHub, etc.) as a label/value pair */
+    /* Each contact method (email, GitHub, etc.) as a label/value pair */
     display: flex;
     justify-content: space-between; /* Label left-aligned, value right-aligned */
     align-items: center;
     border-top: 0.5px solid var(--rule); /* Rule above each row */
     padding-top: 1rem;
   }
+
   .contact-link-label {
-   /* Left side: "Email", "GitHub", etc. */
+    /* Left side: "Email", "GitHub", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--mid);
   }
+
   .contact-link-val {
-   /* Right side: the actual link text */
+    /* Right side: the actual link text */
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
@@ -697,14 +762,17 @@
                                                 keeps layout stable when border appears on hover */
     transition: border-color 0.15s;
   }
-  .contact-link-val:hover { border-color: var(--ink); }  /* On hover, the transparent border becomes visible — a subtle underline reveals itself */
 
- /* ============================================================
-   FOOTER
-   Minimal two-item row with the same hairline border treatment
-   used throughout.
-   ============================================================ */
- 
+  .contact-link-val:hover { border-color: var(--ink); }
+  /* On hover, the transparent border becomes visible — a subtle underline reveals itself */
+
+
+  /* ============================================================
+     FOOTER
+     Minimal two-item row with the same hairline border treatment
+     used throughout.
+     ============================================================ */
+
   footer {
     padding: 1.2rem 2.5rem;
     border-top: 0.5px solid var(--rule);
@@ -712,6 +780,7 @@
     justify-content: space-between;
     align-items: center;
   }
+
   footer p {
     font-family: var(--mono);
     font-size: 10px;
@@ -720,36 +789,38 @@
     color: var(--mid);
   }
 
-/* ============================================================
-   ANIMATIONS
-   Entry animations for the hero section. Elements start
-   invisible and shifted down, then fade up into position.
-   ============================================================ */
- 
+
+  /* ============================================================
+     ANIMATIONS
+     Entry animations for the hero section. Elements start
+     invisible and shifted down, then fade up into position.
+     ============================================================ */
+
   @keyframes fade-up {
-   /* @keyframes defines a named animation sequence.
+    /* @keyframes defines a named animation sequence.
        "from" and "to" are shorthand for 0% and 100% */
     from { opacity: 0; transform: translateY(20px); }
-   /* Starts: invisible, shifted 20px downward */
+    /* Starts: invisible, shifted 20px downward */
     to   { opacity: 1; transform: translateY(0); }
-   /* Ends: fully visible, in natural position */
+    /* Ends: fully visible, in natural position */
   }
+
   .fade-in {
     animation: fade-up 0.6s ease forwards;
-       /* animation: [name] [duration] [easing] [fill-mode]
+    /* animation: [name] [duration] [easing] [fill-mode]
        forwards — keeps the final keyframe state after the animation completes.
        Without this, the element would snap back to its "from" state */
   }
- 
-   /* Staggered delay classes — each delays the same fade-up animation by a slightly
+
+  /* Staggered delay classes — each delays the same fade-up animation by a slightly
      longer time, creating a cascading entrance effect where elements appear
      one after another rather than all at once */
-  .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
-  .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
+  .fade-in-delay-1 { animation-delay: 0.1s;  opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
+  .fade-in-delay-2 { animation-delay: 0.2s;  opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
   .fade-in-delay-3 { animation-delay: 0.35s; opacity: 0; animation-fill-mode: forwards; animation-name: fade-up; animation-duration: 0.6s; }
 
   @media (prefers-reduced-motion: reduce) {
-       /* Accessibility media query. Some users have vestibular disorders or motion sensitivity —
+    /* Accessibility media query. Some users have vestibular disorders or motion sensitivity —
        the OS-level "Reduce Motion" setting triggers this query.
        We disable all animations and make elements immediately visible */
     .fade-in, .fade-in-delay-1, .fade-in-delay-2, .fade-in-delay-3 {
@@ -757,92 +828,148 @@
     }
   }
 
-/* ============================================================
-   RESPONSIVE BREAKPOINT — Mobile (max-width: 768px)
-   @media queries apply styles only when the condition is met.
-   max-width: 768px targets screens 768px wide or narrower
-   (tablets in portrait, all phones).
-   ============================================================ */
- 
+
+  /* ============================================================
+     RESPONSIVE BREAKPOINT — Mobile (max-width: 768px)
+     @media queries apply styles only when the condition is met.
+     max-width: 768px targets screens 768px wide or narrower
+     (tablets in portrait, all phones).
+     ============================================================ */
+
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; } /* Collapses the two-column hero to a single column */
-    .hero-right { display: none; } /* Hides the stats/vertical-type panel entirely on mobile — too dense for small screens */
+    .hero-right { display: none; }        /* Hides the stats panel entirely on mobile — too dense for small screens */
     .projects-grid { grid-template-columns: 1fr; } /* Single-column project cards on mobile */
-    .project-card:nth-child(even) { border-right: 0.5px solid var(--rule); }     /* Restores the right border that was removed for the desktop right-column cards —
-                                                                                  in single-column mobile layout, all cards need a right border */
-    .project-card.featured { grid-template-columns: 1fr; } /* Featured card's internal two columns collapse to one — visual panel stacks above content */
+    .project-card:nth-child(even) { border-right: 0.5px solid var(--rule); }
+    /* Restores the right border that was removed for the desktop right-column cards —
+       in single-column mobile layout, all cards need a right border */
+    .project-card.featured { grid-template-columns: 1fr; } /* Featured card collapses to one column */
     .skills-grid { grid-template-columns: 1fr 1fr; } /* Four skill columns narrow to two on mobile */
     .about-section { grid-template-columns: 1fr; }
-    .about-left { border-right: none; border-bottom: 0.5px solid var(--rule); } /* About section stacks vertically; vertical divider becomes horizontal */
+    .about-left { border-right: none; border-bottom: 0.5px solid var(--rule); }
+    /* About section stacks vertically; vertical divider becomes horizontal */
     .contact-section { grid-template-columns: 1fr; }
-    .contact-left { border-right: none; border-bottom: 0.5px solid var(--rule); } /* Contact section stacks; same divider swap */
+    .contact-left { border-right: none; border-bottom: 0.5px solid var(--rule); }
+    /* Contact section stacks; same divider swap */
     nav { padding: 1rem 1.5rem; }
     .nav-links { gap: 1.2rem; } /* Tighter nav padding and link spacing on narrow screens */
   }
+
 </style>
 </head>
 <body>
 
- <!-- ============================================================
+<!-- ============================================================
+     HERO PORTRAIT IMAGE
+     A single <div> containing the <img> tag.
+     Positioned absolutely inside the hero section so it sits
+     behind the text content. No separate bg-layer wrapper needed
+     since the hero itself is position: relative.
+     The gradient and grain divs have been removed — they were
+     designed for a dark photo background and aren't needed now
+     that the hero uses a light paper background.
+     ============================================================ -->
+<div class="hero-bg-image" id="heroBgImage">
+  <img src="IMG_2389.jpg" alt="RJ Newton">
+  <!-- <img> loads the portrait photo. src path must match the filename
+       in the same folder as this HTML file in your GitHub repo.
+       alt text describes the image for screen readers and displays
+       if the image fails to load. -->
+</div>
+
+<!-- ============================================================
      NAVIGATION
      Fixed bar. <nav> is a semantic HTML5 landmark element —
      screen readers use it to identify navigation regions.
+     id="mainNav" lets JS reference this element.
      ============================================================ -->
-<!-- ── HERO BACKGROUND COMPOSITING LAYERS ── -->
-<!-- Fixed behind everything; JS hides these once user scrolls past the hero -->
-<div class="hero-bg-image" id="heroBgImage">
-  <img src="IMG_2389.jpg" alt="RJ Newton">
-</div>
-  <div class="hero-bg-gradient"></div>
-  <div class="hero-bg-grain"></div>
-</div>
-
 <nav id="mainNav">
   <span class="nav-logo">RJ Newton — Dev</span>
+  <!-- <span> is an inline element with no semantic meaning —
+       used here purely as a styled text container for the wordmark -->
+
   <ul class="nav-links">
+    <!-- <ul> = unordered list — semantically correct for navigation links.
+         list-style: none in CSS hides the bullet points visually. -->
     <li><a href="#projects">Work</a></li>
+    <!-- href="#projects" is an in-page anchor — scrolls to id="projects" -->
     <li><a href="#skills">Skills</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
+<!-- ============================================================
+     HERO SECTION
+     Full-viewport landing area. position: relative in CSS makes
+     this the positioning context for .hero-bg-image inside it.
+     ============================================================ -->
 <section class="hero">
+
+  <!-- LEFT COLUMN — name, description, CTA buttons -->
   <div class="hero-left fade-in">
-    <p class="hero-eyebrow">Software Dev/ Data Scientist/ Web Dev</p>
-    <h1 class="hero-name fade-in-delay-1">RJ<br>Newton</h1>
+    <!-- fade-in class triggers the CSS entry animation on page load -->
+
+    <p class="hero-eyebrow">Software Dev / Data Scientist / Web Dev</p>
+    <!-- <p> = paragraph. Used for a standalone text unit even when it's a single line. -->
+
+    <h1 class="hero-name fade-in-delay-1">RJ<br>Newton.</h1>
+    <!-- <h1> = the most important heading on the page — only one per page.
+         <br> forces a line break so "RJ" and "Newton." stack on separate lines.
+         fade-in-delay-1 staggers entrance 0.1s after the eyebrow. -->
+
     <p class="hero-desc fade-in-delay-2">
       Full-stack developer and data scientist. I build systems that process information at scale and interfaces that make complexity readable.
     </p>
+
     <div class="hero-cta-row" style="margin-top: 2rem;">
+      <!-- <div> groups the two buttons and applies flex layout via .hero-cta-row -->
       <a href="#projects" class="btn-primary">View work</a>
+      <!-- Anchor styled as a filled button — scrolls to projects section -->
       <a href="#contact" class="btn-ghost" style="margin-left: 1rem;">Get in touch ↗</a>
+      <!-- Ghost/text button — ↗ is a unicode diagonal arrow character -->
     </div>
   </div>
+
+  <!-- RIGHT COLUMN — stats and decorative vertical type -->
   <div class="hero-right fade-in-delay-2">
+
     <div class="hero-stats">
+      <!-- Three stat items stacked vertically via flex-direction: column in CSS -->
+
       <div class="hero-stat">
         <p class="hero-stat-num">4+</p>
         <p class="hero-stat-label">Years experience</p>
       </div>
       <div class="hero-stat">
-        <p class="hero-stat-num">6</p>
-        <p class="hero-stat-label">Coding languages (Python, R, HTML, Java Script, CSS, SQL) </p>
+        <p class="hero-stat-num">7</p>
+        <p class="hero-stat-label">Languages (Python, R, HTML, JavaScript, CSS, SQL, TypeScript)</p>
       </div>
       <div class="hero-stat">
         <p class="hero-stat-num">2</p>
         <p class="hero-stat-label">Research Domains</p>
       </div>
     </div>
+
     <div class="hero-vertical-type">DEV</div>
+    <!-- Purely decorative. CSS rotates this 90° and renders it as a faint
+         ink outline. pointer-events: none and user-select: none prevent
+         any interaction with it. -->
+
   </div>
 </section>
 
-<!-- PROJECTS -->
+
+<!-- ============================================================
+     PROJECTS SECTION
+     id="projects" makes this the scroll target for nav "Work"
+     link and the hero "View work" CTA.
+     ============================================================ -->
 <section id="projects">
+
   <div class="section-banner">
     <h2 class="section-banner-title">Selected<br>Work</h2>
+    <!-- <h2> = second-level heading — correct hierarchy below the page's single <h1> -->
     <div class="section-banner-meta">
       <p>2023 — 2026</p>
       <p style="margin-top: 4px;">6 projects</p>
@@ -851,18 +978,24 @@
 
   <div class="projects-grid">
 
-    <!-- FEATURED -->
+    <!-- ── FEATURED CARD (spans full width) ── -->
     <a href="#" class="project-card featured">
+    <!-- The entire card is an <a> tag — makes the full area clickable.
+         href="#" is a placeholder — replace with the actual project URL. -->
+
       <div class="featured-visual">
         <p class="featured-visual-badge">Featured — 2026</p>
         <div class="featured-visual-type">DATA<br>LAKE</div>
       </div>
+
       <div class="featured-content">
         <div>
           <p class="project-index">01 — Featured</p>
           <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Real-Time Analytics Pipeline</h3>
+          <!-- <h3> = third-level heading. Correct hierarchy: h1 → h2 → h3 -->
           <div class="project-tags" style="margin-top: 1.2rem;">
             <span class="tag">Python</span>
+            <!-- Each <span> is an inline element styled as a tech tag pill -->
             <span class="tag">Kafka</span>
             <span class="tag">Spark</span>
             <span class="tag">PostgreSQL</span>
@@ -876,7 +1009,8 @@
       </div>
     </a>
 
-    <!-- CARD 2 -->
+    <!-- ── STANDARD PROJECT CARDS (02 – 06) ── -->
+
     <a href="#" class="project-card">
       <p class="project-index">02</p>
       <h3 class="project-title">ML Model<br>Serving API</h3>
@@ -887,9 +1021,10 @@
       </div>
       <p class="project-desc">Scalable inference endpoint that wraps fine-tuned transformer models behind a versioned REST layer with A/B routing.</p>
       <span class="project-arrow">↗</span>
+      <!-- ↗ is a unicode arrow character. CSS positions it absolutely
+           in the bottom-right corner and animates it on card hover. -->
     </a>
 
-    <!-- CARD 3 -->
     <a href="#" class="project-card">
       <p class="project-index">03</p>
       <h3 class="project-title">Design System<br>Component Library</h3>
@@ -902,7 +1037,6 @@
       <span class="project-arrow">↗</span>
     </a>
 
-    <!-- CARD 4 -->
     <a href="#" class="project-card">
       <p class="project-index">04</p>
       <h3 class="project-title">Vocalization<br>UMAP Classifier</h3>
@@ -916,7 +1050,6 @@
       <span class="project-arrow">↗</span>
     </a>
 
-    <!-- CARD 5 -->
     <a href="#" class="project-card">
       <p class="project-index">05</p>
       <h3 class="project-title">Fashion Trend<br>Intelligence Platform</h3>
@@ -929,7 +1062,6 @@
       <span class="project-arrow">↗</span>
     </a>
 
-    <!-- CARD 6 -->
     <a href="#" class="project-card">
       <p class="project-index">06</p>
       <h3 class="project-title">E-Commerce<br>Recommender</h3>
@@ -945,84 +1077,110 @@
   </div>
 </section>
 
-<!-- SKILLS -->
+
+<!-- ============================================================
+     SKILLS SECTION
+     id="skills" is the scroll target for the nav link.
+     ============================================================ -->
 <section id="skills" class="skills-section">
+
   <div class="section-banner">
     <h2 class="section-banner-title">Capabilities</h2>
     <div class="section-banner-meta">
       <p>Full-stack + data</p>
     </div>
   </div>
+
   <div class="skills-grid">
+
     <div class="skill-col">
       <p class="skill-col-title">Languages</p>
       <ul class="skill-list">
+        <!-- <ul> + <li> is semantically correct for an unordered list.
+             Screen readers announce this as a list. CSS hides bullet points. -->
         <li>Python</li>
-        <li>TypeScript</li>
+        <li>R</li>
         <li>JavaScript</li>
+        <li>TypeScript</li>
         <li>SQL</li>
-        <li>Rust</li>
-        <li>Bash</li>
+        <li>HTML / CSS</li>
       </ul>
     </div>
+
     <div class="skill-col">
       <p class="skill-col-title">Frontend</p>
       <ul class="skill-list">
         <li>React / Next.js</li>
-        <li>Svelte</li>
         <li>D3.js</li>
         <li>CSS / Tailwind</li>
         <li>Framer Motion</li>
         <li>Three.js</li>
       </ul>
     </div>
+
     <div class="skill-col">
       <p class="skill-col-title">Data / ML</p>
       <ul class="skill-list">
-        <li>PyTorch</li>
+        <li>PyTorch / TensorFlow</li>
         <li>scikit-learn</li>
-        <li>Pandas / Polars</li>
-        <li>Apache Spark</li>
-        <li>UMAP</li>
-        <li>dbt</li>
+        <li>Pandas / NumPy</li>
+        <li>UMAP / K-Means</li>
+        <li>Signal Processing</li>
+        <li>Google Analytics</li>
       </ul>
     </div>
+
     <div class="skill-col">
       <p class="skill-col-title">Infrastructure</p>
       <ul class="skill-list">
-        <li>Docker / K8s</li>
-        <li>AWS / GCP</li>
-        <li>PostgreSQL</li>
-        <li>Kafka</li>
-        <li>Redis</li>
-        <li>Supabase</li>
+        <li>RESTful APIs</li>
+        <li>PostgreSQL / Supabase</li>
+        <li>Git / Linux</li>
+        <li>Docker</li>
+        <li>Flask</li>
       </ul>
     </div>
+
   </div>
 </section>
 
-<!-- ABOUT -->
+
+<!-- ============================================================
+     ABOUT SECTION
+     id="about" is the scroll target for the nav link.
+     ============================================================ -->
 <section id="about" class="about-section">
+
   <div class="about-left">
     <div class="about-big-text">About<br>me.</div>
+    <!-- <br> forces "About" and "me." onto separate lines for the stacked effect -->
     <div>
+      <!-- Location block pinned to the bottom via justify-content: space-between -->
       <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.5rem;">Based in</p>
       <p style="font-size: 14px; font-weight: 500;">San Diego, CA</p>
     </div>
   </div>
+
   <div class="about-right">
     <p class="about-body">
-      I work at the intersection of <strong>data engineering</strong>, <strong>machine learning</strong>, and <strong>frontend design</strong>. I'm interested in systems that handle real complexity — not just technically, but in terms of what they reveal to the people using them. <br><br>
+      I work at the intersection of <strong>data engineering</strong>, <strong>machine learning</strong>, and <strong>frontend design</strong>. I'm interested in systems that handle real complexity — not just technically, but in terms of what they reveal to the people using them.<br><br>
+      <!-- <strong> provides semantic emphasis — CSS overrides its color to ink black
+           so it stands out from the muted paragraph text -->
       Currently studying cognitive psychology at UC San Diego while building in the data and ML space. I think the most interesting problems sit between disciplines: where behavioral science meets data, where visual design meets systems architecture.
     </p>
+
+    <!-- Experience timeline — each row is a two-column mini-grid: year | title+place -->
     <div class="about-timeline">
+
       <div class="timeline-item">
         <span class="timeline-year">2026</span>
+        <!-- <span> contains the year — inline element occupying one grid cell -->
         <div>
-          <p class="timeline-title">Fashion market intelligence platform</p>
+          <p class="timeline-title">Fashion Market Intelligence Platform</p>
           <p class="timeline-place">Independent software development</p>
         </div>
       </div>
+
       <div class="timeline-item">
         <span class="timeline-year">2025</span>
         <div>
@@ -1030,95 +1188,179 @@
           <p class="timeline-place">UC San Diego — cognitive bioacoustics lab</p>
         </div>
       </div>
+
       <div class="timeline-item">
         <span class="timeline-year">2024</span>
         <div>
           <p class="timeline-title">Full-Stack Developer</p>
-          <p class="timeline-place">Freelance </p>
+          <p class="timeline-place">Freelance</p>
         </div>
       </div>
+
       <div class="timeline-item">
         <span class="timeline-year">2023</span>
         <div>
-          <p class="timeline-title">B.S. - Cognitive Psychology</p>
-          <p class="timeline-place">Universitey of California San Diego</p>
+          <p class="timeline-title">B.S. — Cognitive Psychology</p>
+          <p class="timeline-place">University of California San Diego</p>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
+
+<!-- ============================================================
+     CONTACT SECTION
+     id="contact" is the scroll target for the nav link and
+     the hero "Get in touch" button.
+     ============================================================ -->
 <section id="contact" class="contact-section">
+
   <div class="contact-left">
     <p class="hero-eyebrow">Let's work together</p>
+    <!-- Reuses .hero-eyebrow class for consistent small uppercase label treatment -->
+
     <h2 class="contact-headline">Get<br>in<br>touch.</h2>
+    <!-- Three <br> tags stack each word on its own line -->
+
     <p class="hero-desc" style="border-top: 0.5px solid var(--rule); padding-top: 1.5rem; margin-top: 1.5rem;">
       Open to full-time roles, contract work, and research collaborations. I typically respond within 24 hours.
     </p>
   </div>
+
   <div class="contact-right">
+
     <div class="contact-link-row">
       <span class="contact-link-label">Email</span>
-      <a href="mailto:hello@example.com" class="contact-link-val">rj.j.newton@gmail.com</a>
+      <a href="mailto:rj.j.newton@gmail.com" class="contact-link-val">rj.j.newton@gmail.com</a>
+      <!-- href="mailto:..." opens the user's default email client pre-addressed -->
     </div>
+
     <div class="contact-link-row">
       <span class="contact-link-label">GitHub</span>
-      <a href="#" class="contact-link-val">github.com/rjjj444</a>
+      <a href="https://github.com/rjjj444" class="contact-link-val">github.com/rjjj444</a>
     </div>
+
     <div class="contact-link-row">
       <span class="contact-link-label">LinkedIn</span>
-      <a href="#" class="contact-link-val">www.linkedin.com/in/rj-newton-3a779226b</a>
+      <a href="https://www.linkedin.com/in/rj-newton-3a779226b" class="contact-link-val">linkedin.com/in/rj-newton</a>
     </div>
+
     <div class="contact-link-row">
       <span class="contact-link-label">Resume</span>
       <a href="#" class="contact-link-val">Download PDF ↗</a>
+      <!-- href="#" placeholder — replace with the path to your resume PDF -->
     </div>
+
   </div>
 </section>
 
-<!-- FOOTER -->
+
+<!-- ============================================================
+     FOOTER
+     <footer> is a semantic HTML5 landmark element.
+     Screen readers identify it as the page footer region.
+     ============================================================ -->
 <footer>
   <p>RJ Newton — Developer Portfolio</p>
   <p>© 2026. All rights reserved.</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script>
-  // ── HERO IMAGE FADE-IN ──
-  // Creates a virtual image object to detect when the photo has fully loaded,
-  // then adds the .loaded class which triggers the 2s CSS opacity transition
-const heroBgImage = document.getElementById('heroBgImage');
-const img = heroBgImage.querySelector('img');
-img.onload = () => heroBgImage.classList.add('loaded');
 
-  // ── NAV SCROLL TRANSITION ──
-  // Watches scroll position — once past the hero (100vh), the nav switches
-  // from transparent chalk text to solid paper background with ink text
+<!-- ============================================================
+     JAVASCRIPT
+     Loaded at the end of <body> so all HTML elements above
+     exist in the DOM before scripts try to reference them.
+     Loading here also prevents scripts from blocking page render.
+     ============================================================ -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- Loads GSAP (GreenSock Animation Platform) from a CDN.
+     Handles the smooth parallax animation on mousemove.
+     Must load before our inline script below uses gsap.to(). -->
+
+<script>
+
+  // ── HERO IMAGE FADE-IN ──────────────────────────────────────────────────────
+
+  const heroBgImage = document.getElementById('heroBgImage');
+  // document.getElementById() searches the DOM for id="heroBgImage" and
+  // returns a reference to it so we don't need to search again each time.
+
+  const img = heroBgImage.querySelector('img');
+  // querySelector('img') finds the <img> tag directly inside heroBgImage.
+  // UPDATED from new Image() — since the <img> is already in the HTML,
+  // the browser starts downloading it automatically. We just need a reference
+  // to it to detect when it finishes loading.
+
+  img.onload = () => heroBgImage.classList.add('loaded');
+  // img.onload fires when the browser confirms the image has fully downloaded.
+  // () => is an arrow function — shorthand for function() {}.
+  // classList.add('loaded') adds the CSS class "loaded" to the wrapper div,
+  // which triggers transition: opacity 2s ease on the <img> inside it,
+  // fading the photo from opacity: 0 to opacity: 1.
+
+
+  // ── NAV SCROLL TRANSITION ───────────────────────────────────────────────────
+
   const nav = document.getElementById('mainNav');
-  const heroBgLayer = document.getElementById('heroBgLayer');
+  // Grabs the nav element so we can toggle its .scrolled class.
+
+  // NOTE: heroBgLayer no longer exists as a separate element — the image is
+  // now positioned inside the hero section, not in a fixed layer. The scroll
+  // listener below is kept for the nav transition but heroBgLayer references
+  // have been removed since that element is gone.
 
   window.addEventListener('scroll', () => {
+    // window.addEventListener() attaches a listener to the browser window.
+    // 'scroll' fires continuously as the user scrolls.
+
     const heroHeight = window.innerHeight;
+    // window.innerHeight = height of the visible viewport in pixels.
+    // Used as a proxy for the hero section height (hero is min-height: 100vh).
+
     if (window.scrollY > heroHeight * 0.85) {
+      // window.scrollY = how many pixels the page has scrolled vertically.
+      // Threshold at 85% of viewport height — slightly before the hero ends
+      // so the transition feels natural.
       nav.classList.add('scrolled');
-      heroBgLayer.classList.add('hidden'); // Fades out bg layer once past hero
+      // Adds .scrolled — CSS transitions nav to solid paper background.
+      // Visually identical to the base state since we already start solid,
+      // but kept in case styling diverges later.
     } else {
       nav.classList.remove('scrolled');
-      heroBgLayer.classList.remove('hidden');
+      // Removes .scrolled when scrolling back up to the hero.
     }
   });
 
-  // ── PARALLAX MOUSEMOVE ──
-  // Maps cursor position to a subtle background image translation,
-  // identical to the modeling site's GSAP parallax implementation
+
+  // ── PARALLAX MOUSEMOVE ──────────────────────────────────────────────────────
+
   document.addEventListener('mousemove', (e) => {
-    // Normalizes cursor to -0.5 → +0.5 range, multiplied by pixel offset limit
+    // 'mousemove' fires on every cursor movement across the document.
+    // (e) is the MouseEvent object carrying cursor position data.
+
     const x = (e.clientX / window.innerWidth  - 0.5) * 15;
+    // e.clientX — cursor's horizontal pixel position from the left edge.
+    // Dividing by window.innerWidth normalizes to 0–1.
+    // Subtracting 0.5 recenters to -0.5 → +0.5 (0 = screen center).
+    // Multiplying by 15 scales to a ±7.5px translation range.
+
     const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    // GSAP interpolates smoothly to the target coordinates over 3 seconds
+    // Same normalization on the vertical axis.
+    // Multiplied by 10 (smaller) since vertical parallax feels stronger.
+
     gsap.to('.hero-bg-image', { x, y, duration: 3, ease: 'power2.out' });
+    // gsap.to() animates the target toward a set of properties.
+    // '.hero-bg-image' — targets the portrait container div.
+    // { x, y } — GSAP translates the element by these pixel values.
+    // duration: 3 — takes 3 seconds to reach the target position.
+    // ease: 'power2.out' — starts fast, decelerates smoothly at the end.
+    // Every mousemove gives GSAP a new target; it interpolates from the
+    // current position — creating fluid continuous parallax motion.
   });
+
 </script>
 
 </body>
