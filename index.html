@@ -159,14 +159,24 @@
   .hero-bg-layer.hidden { opacity: 50; }
 
   /* The actual photo — starts transparent, fades in once loaded */
-  .hero-bg-image {
-    position: absolute; inset: 0;
-    background-image: url('IMG_2389.jpg');
-    background-size: cover;
-    background-position: center 20%;
-    opacity: 50;
-    transition: opacity 2s ease;
-  }
+ .hero-bg-image {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end; /* pins the image to the bottom of the hero */
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-bg-image img {
+  height: 90vh;        /* controls how tall the figure is — adjust this */
+  width: auto;         /* maintains the image's natural aspect ratio */
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.hero-bg-image.loaded img { opacity: 1; }
   .hero-bg-image.loaded { opacity: 1.0; }
 
   /* Dark gradient overlay — heavier at top and bottom for text legibility */
@@ -203,6 +213,7 @@
     z-index: 10; /* Sits above the fixed bg layers */
     border-bottom: 0.5px solid var(--border-mid); /* Hairline rule separating hero from next section */ 
     overflow: hidden; /* Clips any decorative type that extends beyond the section boundary */
+    background: var(--paper);
   }
 
   /* Left column — chalk text on dark background */
@@ -779,8 +790,9 @@
      ============================================================ -->
 <!-- ── HERO BACKGROUND COMPOSITING LAYERS ── -->
 <!-- Fixed behind everything; JS hides these once user scrolls past the hero -->
-<div class="hero-bg-layer" id="heroBgLayer">
-  <div class="hero-bg-image" id="heroBgImage"></div>
+<div class="hero-bg-image" id="heroBgImage">
+  <img src="IMG_2389.jpg" alt="RJ Newton">
+</div>
   <div class="hero-bg-gradient"></div>
   <div class="hero-bg-grain"></div>
 </div>
@@ -1076,10 +1088,9 @@
   // ── HERO IMAGE FADE-IN ──
   // Creates a virtual image object to detect when the photo has fully loaded,
   // then adds the .loaded class which triggers the 2s CSS opacity transition
-  const heroBgImage = document.getElementById('heroBgImage');
-  const img = new Image();
-  img.onload = () => heroBgImage.classList.add('loaded');
-  img.src = 'IMG_2389.jpg';
+const heroBgImage = document.getElementById('heroBgImage');
+const img = heroBgImage.querySelector('img');
+img.onload = () => heroBgImage.classList.add('loaded');
 
   // ── NAV SCROLL TRANSITION ──
   // Watches scroll position — once past the hero (100vh), the nav switches
