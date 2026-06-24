@@ -979,38 +979,28 @@
      link and the hero "View work" CTA.
      ============================================================ -->
 <section id="projects">
-
+  <div class="section-heading">Projects:</div>
   <div class="projects-grid">
 
-      <div class="featured-visual"> 
-        <p class="featured-visual-badge">Featured — 2026</p>
-        <div class="section-heading">Projects:</div>
-        <!-- Decorative ghost display type — purely visual, user-select: none in CSS -->
+    <!-- ── CARD 01: VOLNA ── -->
+    <a href="https://volnatrends.com/" target="_blank" class="project-card">
+      <p class="project-index">01</p>
+      <h3 class="project-title">VOLNA</h3>
+      <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
+      <div class="project-tags">
+        <span class="tag">Flask</span>
+        <span class="tag">Python</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">Supabase</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">Librosa</span>
       </div>
-
-       <!-- ── CARD 01: VOLNA ── -->
-      <div class="featured-content">
-        <div>
-          <p class="project-index">01 — Featured</p>
-          <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
-          <!-- <h3> = third-level heading. Correct hierarchy: h1 → h2 → h3 -->
-          <div class="project-tags" style="margin-top: 1.2rem;">
-            <span class="tag">Python</span>
-            <!-- Each <span> is an inline element styled as a tech tag pill -->
-            <span class="tag">Flask</span>
-            <span class="tag">Supabase</span>
-            <span class="tag">PostgreSQL</span>
-            <span class="tag">JavaScript</span>
-          </div>
-        </div>
-        <p class="project-desc">Relational database platform tracking 150+ brands, 1,600+ collections, and 203 aesthetic tags across nine interconnected tables. Features Google Trends integration and style-matching methodology rooted in consumer psychology.</p>
-        <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
-          <a href="https://volnatrends.com" target="_blank" class="btn-primary">Visit site</a>
-          <a href="https://github.com/rjjj444" target="_blank" class="btn-ghost">GitHub ↗</a>
-        </div>
-      </div>
+      <p class="project-desc">Relational database platform tracking hundreds of brands, 1,600+ collections, and hundreds of aesthetic tags across a multitude of interconnected tables. Features Google Trends integration and style-matching methodology rooted in consumer psychology.</p>
+      <span class="project-arrow">↗</span>
+      <!-- ↗ is a unicode arrow. CSS positions it absolutely in the bottom-right
+           corner and animates it upward-right on card hover. -->
     </a>
-
+       
     <!-- ── CARD 02: DOLPHIN UMAP CLASSIFIER ── -->
     <a href="https://github.com/rjjj444/Dolphin-UMAP-Model" target="_blank" class="project-card">
       <p class="project-index">02</p>
@@ -1091,10 +1081,10 @@
      SKILLS SECTION
      id="skills" is the scroll target for the nav link.
      ============================================================ -->
-<section id="skills" class="skills-section">
+<section id="skills">
   <div class="section-heading">Capabilities</div>
-
-  <div class="skills-grid">
+  <div class="skills-section">
+    <div class="skills-grid">
 
     <div class="skill-col">
       <p class="skill-col-title">Languages</p>
@@ -1144,6 +1134,7 @@
       </ul>
     </div>
 
+   </div>
   </div>
 </section>
 
@@ -1152,7 +1143,9 @@
      ABOUT SECTION
      id="about" is the scroll target for the nav link.
      ============================================================ -->
-<section id="about" class="about-section">
+<section id="about">
+  <div class="section-heading">About me.</div>
+  <div class="about-section">
 
   <div class="about-left">
     <div class="about-big-text">About<br>me.</div>
@@ -1195,7 +1188,7 @@
       <div class="timeline-item">
         <span class="timeline-year">2025 - 2026</span>
         <div>
-          <p class="timeline-title">Lead Qunatitative Data Analyst/p>
+          <p class="timeline-title">Lead Quantitative Data Analyst</p>
           <p class="timeline-place">UC San Diego — Research Committee</p>
         </div>
       </div>
@@ -1216,9 +1209,10 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</section>
+     </div><!-- closes about-timeline -->
+    </div><!-- closes about-right -->
+  </div><!-- closes about-section -->
+</section><!-- closes #about -->
 
 
 <!-- ============================================================
@@ -1262,8 +1256,9 @@
       <!-- href="#" placeholder — replace with the path to your resume PDF -->
     </div>
 
-  </div>
-</section>
+     </div><!-- closes contact-right -->
+  </div><!-- closes contact-section -->
+</section><!-- closes #contact -->
 
 
 <!-- ============================================================
