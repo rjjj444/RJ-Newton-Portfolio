@@ -193,7 +193,7 @@
                                   ensures feet are always visible at the bottom */
     justify-content: center;   /* Horizontally centers the figure within the hero */
     pointer-events: none;      /* Decorative — clicks pass through to content above */
-    z-index: 2;                /* Behind hero text content (hero-left/right sit above at z-index: 2) */
+    z-index: 3;                /* Behind hero text content (hero-left/right sit above at z-index: 2) */
   }
 
   .hero-bg-image img {
@@ -249,7 +249,7 @@
     justify-content: flex-end; /* Pushes all content to the bottom of the column —
                                   name and description sit near the bottom edge */
     position: relative;     /* Ensures text sits above the bg image (z-index stacking) */
-    z-index: 2;             /* Above the hero-bg-image (z-index: 0) */
+    z-index: 4;             /* Above the hero-bg-image (z-index: 0) */
   }
 
   .hero-eyebrow {
@@ -301,7 +301,7 @@
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
     padding: 3rem 2.5rem;
     position: relative;      /* Positioning context for the absolutely-placed vertical "DEV" type */
-    z-index: 2;              /* Above the hero-bg-image */
+    z-index: 4;              /* Above the hero-bg-image */
     border-left: 0.5px solid var(--rule); /* UPDATED: --rule instead of --border-mid — visible on light bg */
     padding-left: 2.5rem;    /* Breathing room between the border line and the stat text */
   }
