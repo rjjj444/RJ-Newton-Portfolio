@@ -197,7 +197,7 @@
     min-height: 100vh; /* vh = viewport height units. 100vh = the full visible screen height.
                              min-height allows it to grow taller if content needs it */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal-width columns. 1fr = one fraction of available space */
+    grid-template-columns: 2fr 1fr; /* Two equal-width columns. 1fr = one fraction of available space */
     position: relative; /* Establishes a positioning context for absolutely-positioned children
                              (the vertical "DEV" type) */
     z-index: 10; /* Sits above the fixed bg layers */
@@ -255,7 +255,7 @@
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
     padding: 3rem 2.5rem;
     position: relative; /* Positioning context for the absolutely-placed vertical "DEV" type */
-    border-left: 0.5px solid var(--border-mid); /* add this */
+    border-left: 0.5px solid var(--border-mid); 
     padding-left: 2.5rem; /* add breathing room between line and text */
   }
   .hero-vertical-type {
