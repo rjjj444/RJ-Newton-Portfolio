@@ -1462,7 +1462,7 @@
  
   const scene  = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 1000);
-  camera.position.set(0, 0, 20);
+  camera.position.set(0, 0, 15);
  
   // ── LIGHTING ─────────────────────────────────────────────────
   // Key light top-right gives the cloth depth.
@@ -1588,7 +1588,7 @@
   // Tilt cloth slightly toward the viewer for visual depth
   mesh.rotation.x = 0.12;
   // Centre it in the right portion of the canvas (canvas covers 70% right)
-  mesh.position.set(-1.5, 0.8, 0);
+  mesh.position.set(-1.5, 1.5, 0);
   scene.add(mesh);
  
   // ── CURSOR TRACKING ───────────────────────────────────────────
