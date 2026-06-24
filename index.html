@@ -743,6 +743,9 @@
     line-height: 1.8; /* Generous line height for comfortable body text reading */
     color: var(--mid); /* Muted gray — secondary text, not primary */
     max-width: 52ch;   /* Constrains to ~52 characters per line — optimal body text measure */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    min-height: 40vh; /* Ensures the section has substantial vertical presence on the page */
   }
 
   .about-body strong {
@@ -763,10 +766,11 @@
   .timeline-item {
     /* Each individual row in the experience timeline —
        e.g. "2025 - Present | Fashion Market Intelligence Platform" */
-    display: grid;
-    grid-template-columns: 6rem 1fr; /* Fixed 6rem date column, flexible content column */
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Rows are pushed to the bottom of the column */
     gap: 1.5rem;
-    padding: 1.2rem 0;
     border-bottom: 0.5px solid var(--rule); /* Hairline rule below each timeline entry */
     align-items: baseline; /* Aligns the date and title text along their text baselines */
   }
