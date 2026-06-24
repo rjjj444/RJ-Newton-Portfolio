@@ -50,7 +50,7 @@
        Using variables means one change here propagates everywhere they're used. */
 
     --ink: #0a0a0a;                             /* Near-black for text and primary surfaces */
-    --paper: #F9F9F9;                        /* white page background to match picture on page */
+    --paper: #f5f3ef;                           /* Warm off-white page background — avoids harsh pure white */
     --mid: #8a8a8a;                             /* Medium gray for secondary/muted text */
     --rule: #d0cdc9;                            /* Light warm gray for border lines (the "rules" in print design) */
     --accent: #0a0a0a;                          /* Accent color — same as ink here, kept separate for easy retheming */
@@ -342,7 +342,7 @@
     /* Solid filled button — ink background, paper text */
     display: inline-block; /* Allows padding/width to work on an anchor tag */
     background: var(--ink);   /* UPDATED: ink fill on light background */
-    color: var(--paper) !important;     /* UPDATED: paper text on ink button */
+    color: var(--paper);      /* UPDATED: paper text on ink button */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -860,6 +860,24 @@
 <body>
 
 <!-- ============================================================
+     HERO PORTRAIT IMAGE
+     A single <div> containing the <img> tag.
+     Positioned absolutely inside the hero section so it sits
+     behind the text content. No separate bg-layer wrapper needed
+     since the hero itself is position: relative.
+     The gradient and grain divs have been removed — they were
+     designed for a dark photo background and aren't needed now
+     that the hero uses a light paper background.
+     ============================================================ -->
+<div class="hero-bg-image" id="heroBgImage">
+  <img src="IMG_2389.jpg" alt="RJ Newton">
+  <!-- <img> loads the portrait photo. src path must match the filename
+       in the same folder as this HTML file in your GitHub repo.
+       alt text describes the image for screen readers and displays
+       if the image fails to load. -->
+</div>
+
+<!-- ============================================================
      NAVIGATION
      Fixed bar. <nav> is a semantic HTML5 landmark element —
      screen readers use it to identify navigation regions.
@@ -887,23 +905,6 @@
      this the positioning context for .hero-bg-image inside it.
      ============================================================ -->
 <section class="hero">
-     <!-- ============================================================
-     HERO PORTRAIT IMAGE
-     A single <div> containing the <img> tag.
-     Positioned absolutely inside the hero section so it sits
-     behind the text content. No separate bg-layer wrapper needed
-     since the hero itself is position: relative.
-     The gradient and grain divs have been removed — they were
-     designed for a dark photo background and aren't needed now
-     that the hero uses a light paper background.
-     ============================================================ -->
-<div class="hero-bg-image" id="heroBgImage">
-  <img src="IMG_2389.jpg" alt="RJ Newton">
-  <!-- <img> loads the portrait photo. src path must match the filename
-       in the same folder as this HTML file in your GitHub repo.
-       alt text describes the image for screen readers and displays
-       if the image fails to load. -->
-</div>
 
   <!-- LEFT COLUMN — name, description, CTA buttons -->
   <div class="hero-left fade-in">
@@ -975,16 +976,18 @@
     </div>
   </div>
 
-  <!-- ── FEATURED CARD: VOLNA (spans full width) ── -->
+  <div class="projects-grid">
+
+    <!-- ── FEATURED CARD: VOLNA (spans full width) ── -->
     <a href="https://volnatrends.com" target="_blank" class="project-card featured">
     <!-- target="_blank" opens the link in a new tab — good practice for external links -->
- 
+
       <div class="featured-visual">
         <p class="featured-visual-badge">Featured — 2026</p>
-        <div class="featured-visual-type">Projects</div>
+        <div class="featured-visual-type">VOLNA</div>
         <!-- Decorative ghost display type — purely visual, user-select: none in CSS -->
       </div>
- 
+
       <div class="featured-content">
         <div>
           <p class="project-index">01 — Featured</p>
@@ -1006,7 +1009,7 @@
         </div>
       </div>
     </a>
- 
+
     <!-- ── CARD 02: DOLPHIN UMAP CLASSIFIER ── -->
     <a href="https://github.com/rjjj444/Dolphin-UMAP-Model" target="_blank" class="project-card">
       <p class="project-index">02</p>
@@ -1022,7 +1025,7 @@
       <!-- ↗ is a unicode arrow. CSS positions it absolutely in the bottom-right
            corner and animates it upward-right on card hover. -->
     </a>
- 
+
     <!-- ── CARD 03: DOLPHIN CNN WHISTLE DETECTOR ── -->
     <a href="https://github.com/rjjj444" target="_blank" class="project-card">
       <p class="project-index">03</p>
@@ -1036,7 +1039,7 @@
       <p class="project-desc">CNN-based whistle detection model integrating Raven Pro selection tables and the SEANOE public dataset. Achieves strong early detection results on held-out dolphin vocalization recordings.</p>
       <span class="project-arrow">↗</span>
     </a>
- 
+
     <!-- ── CARD 04: SEM REPLICATION STUDY ── -->
     <a href="https://github.com/rjjj444" target="_blank" class="project-card">
       <p class="project-index">04</p>
@@ -1050,7 +1053,7 @@
       <p class="project-desc">Structural equation model replication of Zhang & Zhang's blind box consumer behavior paper (Frontiers in Psychology), omitting the functional value variable to test model robustness.</p>
       <span class="project-arrow">↗</span>
     </a>
- 
+
     <!-- ── CARD 05: MODELING PORTFOLIO SITE ── -->
     <a href="https://rjnewton.com" target="_blank" class="project-card">
       <p class="project-index">05</p>
@@ -1064,7 +1067,7 @@
       <p class="project-desc">Hand-coded editorial portfolio site for modeling, creative direction, and styling work. Features cinematic background compositing, GSAP parallax, and individual campaign pages.</p>
       <span class="project-arrow">↗</span>
     </a>
- 
+
     <!-- ── CARD 06: THIS DEV PORTFOLIO ── -->
     <a href="https://rjncodes.dev" target="_blank" class="project-card">
       <p class="project-index">06</p>
@@ -1078,7 +1081,7 @@
       <p class="project-desc">This site. Hand-coded editorial portfolio inspired by fashion magazine design systems — Balenciaga campaign typography, Marni spread grid structure, and Mingyu magazine banner treatment.</p>
       <span class="project-arrow">↗</span>
     </a>
- 
+
   </div>
 </section>
 
