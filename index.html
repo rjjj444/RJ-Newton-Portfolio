@@ -860,24 +860,6 @@
 <body>
 
 <!-- ============================================================
-     HERO PORTRAIT IMAGE
-     A single <div> containing the <img> tag.
-     Positioned absolutely inside the hero section so it sits
-     behind the text content. No separate bg-layer wrapper needed
-     since the hero itself is position: relative.
-     The gradient and grain divs have been removed — they were
-     designed for a dark photo background and aren't needed now
-     that the hero uses a light paper background.
-     ============================================================ -->
-<div class="hero-bg-image" id="heroBgImage">
-  <img src="IMG_2389.jpg" alt="RJ Newton">
-  <!-- <img> loads the portrait photo. src path must match the filename
-       in the same folder as this HTML file in your GitHub repo.
-       alt text describes the image for screen readers and displays
-       if the image fails to load. -->
-</div>
-
-<!-- ============================================================
      NAVIGATION
      Fixed bar. <nav> is a semantic HTML5 landmark element —
      screen readers use it to identify navigation regions.
@@ -905,6 +887,24 @@
      this the positioning context for .hero-bg-image inside it.
      ============================================================ -->
 <section class="hero">
+     
+<!-- ============================================================
+     HERO PORTRAIT IMAGE
+     A single <div> containing the <img> tag.
+     Positioned absolutely inside the hero section so it sits
+     behind the text content. No separate bg-layer wrapper needed
+     since the hero itself is position: relative.
+     The gradient and grain divs have been removed — they were
+     designed for a dark photo background and aren't needed now
+     that the hero uses a light paper background.
+     ============================================================ -->
+<div class="hero-bg-image" id="heroBgImage">
+  <img src="IMG_2389.jpg" alt="RJ Newton">
+  <!-- <img> loads the portrait photo. src path must match the filename
+       in the same folder as this HTML file in your GitHub repo.
+       alt text describes the image for screen readers and displays
+       if the image fails to load. -->
+</div>
 
   <!-- LEFT COLUMN — name, description, CTA buttons -->
   <div class="hero-left fade-in">
