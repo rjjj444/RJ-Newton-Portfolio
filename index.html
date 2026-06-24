@@ -976,6 +976,19 @@
      (tablets in portrait, all phones).
      ============================================================ */
 
+/* ── CLOTH CANVAS — Three.js cloth simulation in hero ── */
+  #cloth-canvas {
+    position: absolute;
+    top: 0;
+    left: 30%;
+    right: 0;
+    bottom: 0;
+    width: 70%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+     
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; } /* Collapses the two-column hero to a single column */
     .hero-right { display: none; }        /* Hides the stats panel entirely on mobile — too dense for small screens */
@@ -1027,6 +1040,9 @@
      this the positioning context for .hero-bg-image inside it.
      ============================================================ -->
 <section class="hero">
+
+     <!-- Three.js cloth simulation — floats centre-right in the hero -->
+<canvas id="cloth-canvas"></canvas>
      
 <!-- ============================================================
      HERO PORTRAIT IMAGE
@@ -1038,6 +1054,7 @@
      designed for a dark photo background and aren't needed now
      that the hero uses a light paper background.
      ============================================================ -->
+     
 <div class="hero-bg-image" id="heroBgImage">
   <img src="IMG_2389.jpg" alt="RJ Newton">
   <!-- <img> loads the portrait photo. src path must match the filename
@@ -1411,6 +1428,296 @@
      Handles the smooth parallax animation on mousemove.
      Must load before our inline script below uses gsap.to(). -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ============================================================
+// THREE.JS CLOTH SIMULATION
+// Verlet integration + constraint relaxation.
+// The cloth hangs from a pinned top row and billows with
+// time-varying wind. The cursor applies a local repulsion force.
+// Ink colour (#0a0a0a) on paper background (#F9F9F9).
+// ============================================================
+(function () {
+ 
+  // ── RENDERER ─────────────────────────────────────────────────
+ 
+  const canvas = document.getElementById('cloth-canvas');
+ 
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,       // transparent bg — paper shows through
+    antialias: true
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+ 
+  function getSize() {
+    return { w: canvas.clientWidth, h: canvas.clientHeight };
+  }
+ 
+  let { w, h } = getSize();
+  renderer.setSize(w, h, false);
+ 
+  // ── SCENE + CAMERA ────────────────────────────────────────────
+ 
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 1000);
+  camera.position.set(0, 0, 20);
+ 
+  // ── LIGHTING ─────────────────────────────────────────────────
+  // Key light top-right gives the cloth depth.
+  // Subtle fill from below-left so the underside isn't pitch black.
+  // Ambient keeps the ink colour readable without washing it out.
+ 
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+ 
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(6, 10, 8);
+  scene.add(key);
+ 
+  const fill = new THREE.DirectionalLight(0xdddddd, 0.35);
+  fill.position.set(-5, -4, 5);
+  scene.add(fill);
+ 
+  // ── CLOTH PARAMETERS ─────────────────────────────────────────
+ 
+  const COLS       = 32;    // horizontal particles — more = finer weave
+  const ROWS       = 26;    // vertical particles
+  const REST       = 0.38;  // rest distance between neighbours
+  const GRAVITY    = -0.007;
+  const DAMPING    = 0.986; // velocity damping per frame
+  const ITERS      = 10;    // constraint solver passes per frame
+  const CLOTH_W    = COLS * REST;
+  const CLOTH_H    = ROWS * REST;
+ 
+  // ── PARTICLES ────────────────────────────────────────────────
+  // Flat array for fast iteration. Each particle: pos, prev, pinned.
+ 
+  const N  = ROWS * COLS;
+  const px = new Float32Array(N); // position x
+  const py = new Float32Array(N); // position y
+  const pz = new Float32Array(N); // position z
+  const ox = new Float32Array(N); // previous x  (Verlet)
+  const oy = new Float32Array(N); // previous y
+  const oz = new Float32Array(N); // previous z
+  const pin = new Uint8Array(N);  // 1 = pinned
+ 
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const i = r * COLS + c;
+      px[i] = ox[i] = c * REST - CLOTH_W / 2;
+      py[i] = oy[i] = -r * REST + CLOTH_H / 2;
+      pz[i] = oz[i] = 0;
+      pin[i] = r === 0 ? 1 : 0; // pin entire top row
+    }
+  }
+ 
+  // ── CONSTRAINTS ───────────────────────────────────────────────
+  // Pre-built as typed arrays for speed.
+  // Structural, shear, and bend (2-apart) constraints.
+ 
+  const cA   = []; // particle index A
+  const cB   = []; // particle index B
+  const cLen = []; // rest length
+ 
+  function addC(a, b, len) { cA.push(a); cB.push(b); cLen.push(len); }
+ 
+  const D  = REST;
+  const DS = REST * Math.SQRT2;
+  const D2 = REST * 2;
+ 
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const i = r * COLS + c;
+      if (c < COLS - 1) addC(i, i + 1,        D );  // right
+      if (r < ROWS - 1) addC(i, i + COLS,      D );  // down
+      if (c < COLS-1 && r < ROWS-1) addC(i, i+COLS+1, DS); // diag ↘
+      if (c > 0      && r < ROWS-1) addC(i, i+COLS-1, DS); // diag ↙
+      if (c < COLS-2) addC(i, i + 2,           D2); // bend →
+      if (r < ROWS-2) addC(i, i + COLS * 2,    D2); // bend ↓
+    }
+  }
+ 
+  const NC  = cA.length;
+  const iCA = new Int32Array(cA);
+  const iCB = new Int32Array(cB);
+  const fCL = new Float32Array(cLen);
+ 
+  // ── THREE.JS GEOMETRY ─────────────────────────────────────────
+ 
+  const verts   = new Float32Array(N * 3);
+  const uvArr   = new Float32Array(N * 2);
+  const idxArr  = [];
+ 
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const i = r * COLS + c;
+      uvArr[i*2]   = c / (COLS-1);
+      uvArr[i*2+1] = 1 - r / (ROWS-1);
+    }
+  }
+ 
+  for (let r = 0; r < ROWS-1; r++) {
+    for (let c = 0; c < COLS-1; c++) {
+      const a = r*COLS+c, b = a+1, d = a+COLS, e = d+1;
+      idxArr.push(a,b,d, b,e,d);
+    }
+  }
+ 
+  const geo = new THREE.BufferGeometry();
+  const posAttr = new THREE.BufferAttribute(verts, 3);
+  posAttr.setUsage(THREE.DynamicDrawUsage);
+  geo.setAttribute('position', posAttr);
+  geo.setAttribute('uv', new THREE.BufferAttribute(uvArr, 2));
+  geo.setIndex(idxArr);
+ 
+  // ── MATERIAL ─────────────────────────────────────────────────
+  // Phong gives the specular sheen that makes it look like a
+  // tightly woven fabric. Ink colour, subtle warm highlight.
+  // DoubleSide so you see the cloth when it billows toward you.
+ 
+  const mat = new THREE.MeshPhongMaterial({
+    color:     0x111111,  // ink — near #0a0a0a
+    specular:  0x999999,  // warm light-grey highlight
+    shininess: 55,
+    side:      THREE.DoubleSide,
+    flatShading: false
+  });
+ 
+  const mesh = new THREE.Mesh(geo, mat);
+  // Tilt cloth slightly toward the viewer for visual depth
+  mesh.rotation.x = 0.12;
+  // Centre it in the right portion of the canvas (canvas covers 70% right)
+  mesh.position.set(-1.5, 0.8, 0);
+  scene.add(mesh);
+ 
+  // ── CURSOR TRACKING ───────────────────────────────────────────
+ 
+  // Normalised device coords updated on mousemove
+  let mx = 9999, my = 9999;
+ 
+  window.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    // Only track when the cursor is over the canvas area
+    if (e.clientX < rect.left) { mx = 9999; return; }
+    mx =  ((e.clientX - rect.left)  / rect.width)  * 2 - 1;
+    my = -((e.clientY - rect.top)   / rect.height) * 2 + 1;
+  });
+ 
+  // Unproject cursor to cloth plane (z ≈ 0) in world space
+  const mouseWorld = new THREE.Vector3();
+  const ray        = new THREE.Raycaster();
+ 
+  // ── TIME ──────────────────────────────────────────────────────
+  let t = 0;
+ 
+  // ── SIMULATION ────────────────────────────────────────────────
+ 
+  function simulate() {
+    t += 0.016;
+ 
+    // 1. Verlet integration — apply gravity and wind
+    for (let i = 0; i < N; i++) {
+      if (pin[i]) continue;
+ 
+      const vx = (px[i] - ox[i]) * DAMPING;
+      const vy = (py[i] - oy[i]) * DAMPING;
+      const vz = (pz[i] - oz[i]) * DAMPING;
+ 
+      const c = i % COLS;
+      const r = (i / COLS) | 0;
+ 
+      // Organic wind — two overlapping sine waves for natural feel
+      const windX = (Math.sin(t * 1.1 + c * 0.28) * 0.0035
+                   + Math.sin(t * 0.6 + r * 0.35) * 0.0020);
+      const windZ = (Math.cos(t * 0.9 + c * 0.22) * 0.0055
+                   + Math.cos(t * 1.4 + r * 0.18) * 0.0025);
+ 
+      ox[i] = px[i]; oy[i] = py[i]; oz[i] = pz[i];
+ 
+      px[i] += vx + windX;
+      py[i] += vy + GRAVITY;
+      pz[i] += vz + windZ;
+    }
+ 
+    // 2. Cursor repulsion
+    if (mx < 9000) {
+      ray.setFromCamera({ x: mx, y: my }, camera);
+      // Intersect cloth plane (z = mesh.position.z ≈ 0)
+      const denom = ray.ray.direction.z;
+      if (Math.abs(denom) > 0.0001) {
+        const t_ = -ray.ray.origin.z / denom;
+        mouseWorld.copy(ray.ray.origin).addScaledVector(ray.ray.direction, t_);
+      }
+ 
+      const RADIUS = 2.0;
+      const FORCE  = 0.07;
+      const localX = mouseWorld.x - mesh.position.x;
+      const localY = mouseWorld.y - mesh.position.y;
+ 
+      for (let i = 0; i < N; i++) {
+        if (pin[i]) continue;
+        const dx = px[i] - localX;
+        const dy = py[i] - localY;
+        const d  = Math.sqrt(dx*dx + dy*dy);
+        if (d < RADIUS && d > 0.001) {
+          const f = (1 - d / RADIUS) * FORCE;
+          px[i] += dx / d * f;
+          py[i] += dy / d * f;
+          pz[i] += f * 0.6; // push slightly toward viewer for ripple depth
+        }
+      }
+    }
+ 
+    // 3. Satisfy constraints — Gauss-Seidel relaxation
+    for (let iter = 0; iter < ITERS; iter++) {
+      for (let k = 0; k < NC; k++) {
+        const a  = iCA[k], b = iCB[k];
+        const dx = px[b] - px[a];
+        const dy = py[b] - py[a];
+        const dz = pz[b] - pz[a];
+        const d  = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.0001;
+        const cor = (d - fCL[k]) / d * 0.5;
+        const cx = dx * cor, cy = dy * cor, cz = dz * cor;
+ 
+        if (!pin[a]) { px[a] += cx; py[a] += cy; pz[a] += cz; }
+        if (!pin[b]) { px[b] -= cx; py[b] -= cy; pz[b] -= cz; }
+      }
+    }
+ 
+    // 4. Write positions to geometry buffer
+    for (let i = 0; i < N; i++) {
+      verts[i*3]   = px[i];
+      verts[i*3+1] = py[i];
+      verts[i*3+2] = pz[i];
+    }
+    posAttr.needsUpdate = true;
+    geo.computeVertexNormals(); // recompute so lighting stays correct
+  }
+ 
+  // ── RENDER LOOP ───────────────────────────────────────────────
+ 
+  function animate() {
+    requestAnimationFrame(animate);
+    simulate();
+    renderer.render(scene, camera);
+  }
+ 
+  animate();
+ 
+  // ── RESIZE ────────────────────────────────────────────────────
+ 
+  window.addEventListener('resize', () => {
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+    camera.aspect = cw / ch;
+    camera.updateProjectionMatrix();
+    renderer.setSize(cw, ch, false);
+  });
+ 
+})();
+</script>
+     
 <script>
 
   // ── HERO IMAGE FADE-IN ──────────────────────────────────────────────────────
