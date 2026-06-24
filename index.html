@@ -80,7 +80,7 @@
                                          the viewport width (common with large decorative type) */
   }
 
-  /* ============================================================
+/* ============================================================
      NAVIGATION
      Fixed bar that stays at the top of the viewport as you scroll.
      Starts solid (paper background) immediately since the hero
@@ -109,33 +109,46 @@
     background: var(--paper);              /* UPDATED: solid paper background from the start —
                                                hero is now light so no transparent phase needed */
     transition: background 0.4s ease, border-color 0.4s ease;
+    /* transition animates the background and border-color properties whenever they change.
+       0.4s is the duration, ease is the timing curve (fast start, slow end).
+       This was originally used for the transparent-to-solid scroll transition —
+       kept in place in case the nav styling diverges later. */
   }
 
   /* JS adds this class once user scrolls past the hero — kept for compatibility
      but visually identical to the base state since both use --paper */
   nav.scrolled {
+    /* .scrolled is toggled by JavaScript when the user scrolls past the hero.
+       Currently identical to the base nav state — both use --paper background.
+       Kept here so future style changes (e.g. adding a shadow on scroll) can
+       be applied without restructuring the JavaScript logic. */
     background: var(--paper);
     border-bottom-color: var(--rule);
   }
 
   .nav-logo {
+    /* Controls the "RJ Newton — Dev" wordmark on the left side of the nav bar */
     font-family: var(--mono);    /* Using the variable "mono" we created earlier to apply Monospace font for the logo wordmark */
     font-size: 12px;
     letter-spacing: 0.12em;      /* Wide tracking — 0.12em = 12% of the font size between each letter */
     text-transform: uppercase;   /* Forces all characters to uppercase regardless of HTML content */
     color: var(--ink);           /* UPDATED: ink black — readable on the light paper background */
-    transition: color 0.4s ease;
+    transition: color 0.4s ease; /* Smooth color change if the nav state changes */
   }
 
   nav.scrolled .nav-logo { color: var(--ink); }
+  /* Descendant selector: targets .nav-logo only when it's inside nav.scrolled.
+     Currently the same color as the base state — kept for future flexibility. */
 
   .nav-links {
+    /* The <ul> containing the four navigation anchor links (Work, Skills, About, Contact) */
     display: flex;    /* Links sit horizontally in a row */
     gap: 2.5rem;      /* Space between each nav item */
     list-style: none; /* Removes the default bullet points from the <ul> */
   }
 
   .nav-links a {
+    /* Styles every anchor tag inside the nav links list */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -146,6 +159,8 @@
   }
 
   nav.scrolled .nav-links a { color: var(--mid); }
+  /* Keeps nav link color as muted gray in the scrolled state —
+     same as the base state, kept for future divergence. */
 
   .nav-links a:hover { color: var(--ink) !important; }
   /* :hover is a pseudo-class that applies styles when the cursor is over the element.
@@ -153,6 +168,8 @@
      !important ensures this wins over any other color rules. */
 
   nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
+  /* Ensures hover still shows full ink black in the scrolled state.
+     !important overrides any conflicting color rules from the scrolled state. */
 
 
   /* ============================================================
@@ -167,13 +184,16 @@
     /* Container div for the portrait <img>.
        position: absolute fills the hero section (which is position: relative).
        Flexbox pins the image to the bottom so feet-to-head is always visible. */
-    position: absolute;
-    inset: 0;                  /* Fills the entire hero section */
+    position: absolute; /* Removes from normal document flow and anchors to the nearest
+                           position: relative parent — which is .hero */
+    inset: 0;           /* Shorthand for top: 0; right: 0; bottom: 0; left: 0 —
+                           stretches the container to fill the entire hero section */
     display: flex;
-    align-items: flex-end;     /* Pins the <img> to the bottom edge of the hero */
-    justify-content: center;   /* Horizontally centers the figure */
+    align-items: flex-end;     /* Pins the <img> to the bottom edge of the hero —
+                                  ensures feet are always visible at the bottom */
+    justify-content: center;   /* Horizontally centers the figure within the hero */
     pointer-events: none;      /* Decorative — clicks pass through to content above */
-    z-index: 0;                /* Behind hero text content (hero-left/right sit above) */
+    z-index: 0;                /* Behind hero text content (hero-left/right sit above at z-index: 2) */
   }
 
   .hero-bg-image img {
@@ -181,11 +201,12 @@
        height: 90vh scales the figure to 90% of the viewport height —
        increase to show more of the figure, decrease to show less.
        width: auto maintains the natural aspect ratio with no distortion. */
-    height: 90vh;
-    width: auto;
-    object-fit: contain;       /* No cropping — the full figure is always visible */
-    opacity: 0;                /* Starts invisible — fades in once the image has loaded */
-    transition: opacity 2s ease; /* 2-second fade-in triggered when .loaded is added by JS */
+    height: 90vh;        /* vh = viewport height units. 90vh = 90% of the visible screen height.
+                            Adjust this value to show more or less of the figure. */
+    width: auto;         /* Maintains the image's natural aspect ratio — no stretching or squishing */
+    object-fit: contain; /* Ensures the full figure fits without any cropping */
+    opacity: 0;          /* Starts completely invisible — prevents flash of unloaded image */
+    transition: opacity 2s ease; /* 2-second fade-in triggered when .loaded class is added by JS */
   }
 
   .hero-bg-image.loaded img { opacity: 1; }
@@ -202,6 +223,8 @@
      ============================================================ */
 
   .hero {
+    /* The main landing section of the page — contains the portrait photo,
+       name, description, CTA buttons on the left, and stats on the right */
     padding-top: 80px;              /* Offsets the fixed nav so content doesn't hide behind it.
                                        80px ≈ the nav's height */
     min-height: 100vh;              /* vh = viewport height units. 100vh = the full visible screen height.
@@ -217,8 +240,9 @@
     background: var(--paper);       /* Explicit paper background — ensures image's white bg blends in */
   }
 
-  /* Left column — ink text on light paper background */
   .hero-left {
+    /* The left two-thirds of the hero — contains eyebrow label, name, description, and buttons.
+       Left column — ink text on light paper background */
     padding: 3rem 2.5rem 3rem;
     display: flex;
     flex-direction: column; /* Stacks children vertically */
@@ -229,17 +253,19 @@
   }
 
   .hero-eyebrow {
-    /* Small label above the name — called an "eyebrow" in editorial design */
+    /* The small "SOFTWARE DEV / DATA SCIENTIST / WEB DEV" label above the name.
+       Called an "eyebrow" in editorial design — a short descriptor above a headline. */
     font-family: var(--mono);
     font-size: 11px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.14em; /* Wider tracking than most elements — helps legibility at small sizes */
     text-transform: uppercase;
     color: var(--mid);       /* UPDATED: muted gray — readable on light background */
     margin-bottom: 1.5rem;
   }
 
   .hero-name {
-    /* clamp(min, preferred, max) — responsive font sizing without media queries:
+    /* The large "RJ Newton." display heading — the most prominent text on the page.
+       clamp(min, preferred, max) — responsive font sizing without media queries:
        - Never smaller than 3.5rem
        - Ideally 7vw (7% of viewport width) — scales with screen size
        - Never larger than 6rem
@@ -255,6 +281,8 @@
   }
 
   .hero-desc {
+    /* The paragraph of body copy beneath the name:
+       "Full-stack developer and data scientist. I build systems..." */
     font-size: 14px;
     color: var(--mid);        /* UPDATED: muted gray for secondary copy on light background */
     max-width: 28ch;          /* ch units = width of the "0" character. 28ch ≈ 28 characters per line.
@@ -266,6 +294,8 @@
   }
 
   .hero-right {
+    /* The right one-third of the hero — contains the 4+/7/2 stat blocks
+       and the decorative vertical "DEV" ghost type */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Stats cluster at top, vertical type fills middle */
@@ -277,8 +307,9 @@
   }
 
   .hero-vertical-type {
-    /* The large outlined "DEV" text rotated to read top-to-bottom.
-       Borrowed directly from the Balenciaga vertical brand treatment */
+    /* The large decorative "DEV" text rotated 90° on the right side of the hero.
+       Borrowed directly from the Balenciaga vertical brand treatment —
+       purely decorative, not readable in the traditional sense */
     writing-mode: vertical-rl;  /* Rotates text direction — rl = right-to-left flow,
                                     which combined with the default stacking order makes text
                                     read top-to-bottom */
@@ -289,9 +320,9 @@
     line-height: 0.88;
     color: transparent;         /* Makes the fill invisible — only the stroke shows */
     -webkit-text-stroke: 1.5px rgba(10,10,10,0.12);
-    /* UPDATED: dark ink outline at low opacity — visible on light background.
+    /* Draws a faint ink outline around each letter at 12% opacity.
        -webkit- prefix required for broad browser support.
-       Creates the "ghost type" editorial effect */
+       Creates the "ghost type" editorial effect visible on the right side of the hero */
     pointer-events: none;       /* Makes the element unclickable and unselectable — it's purely decorative */
     position: absolute;         /* Removes from normal flow, positioned relative to .hero-right */
     right: 2rem;
@@ -301,18 +332,21 @@
   }
 
   .hero-stats {
+    /* Wrapper for the three stat blocks (4+ Years, 7 Languages, 2 Research Domains) */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;     /* Space between each stat item */
-    margin-left: auto; /* Pushes the stats block to the right side of the column */
+    gap: 1.5rem;       /* Space between each stat item */
+    margin-left: auto; /* Pushes the entire stats block to the right side of the column */
   }
 
   .hero-stat {
-    border-top: 0.5px solid var(--rule); /* UPDATED: --rule — visible on light background */
+    /* Individual stat block — e.g. "4+" on top and "YEARS EXPERIENCE" below */
+    border-top: 0.5px solid var(--rule); /* Thin horizontal rule above each stat */
     padding-top: 1rem;
   }
 
   .hero-stat-num {
+    /* The large number in each stat: "4+", "7", "2" */
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -321,6 +355,7 @@
   }
 
   .hero-stat-label {
+    /* The small label beneath each number: "YEARS EXPERIENCE", "LANGUAGES", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
@@ -330,7 +365,8 @@
   }
 
   .hero-cta-row {
-    /* Wrapper for the two call-to-action buttons */
+    /* Wrapper div for the two CTA buttons: "VIEW WORK" and "GET IN TOUCH ↗"
+       Sits at the bottom of the hero-left column */
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -339,7 +375,9 @@
   /* ── BUTTONS ── */
 
   .btn-primary {
-    /* Solid filled button — ink background, paper text */
+    /* The solid filled black button — used for "VIEW WORK" in the hero
+       and "VISIT SITE" in the featured project card.
+       Solid filled button — ink background, paper text */
     display: inline-block; /* Allows padding/width to work on an anchor tag */
     background: var(--ink);   /* UPDATED: ink fill on light background */
     color: var(--paper);      /* UPDATED: paper text on ink button */
@@ -355,13 +393,16 @@
   }
 
   .btn-primary:hover {
+    /* On hover: the solid button inverts — background disappears,
+       text turns ink, and a hairline outline appears */
     background: transparent;
-    color: var(--ink);              /* UPDATED: ink text on hover */
+    color: var(--ink);               /* UPDATED: ink text on hover */
     outline: 0.5px solid var(--ink); /* UPDATED: ink outline on hover */
   }
 
   .btn-ghost {
-    /* Underline-only button — no background fill, text with bottom border */
+    /* The underline-only button — used for "GET IN TOUCH ↗" and "GITHUB ↗".
+       No background fill, just text with a bottom border underline. */
     display: inline-block;
     color: var(--ink);        /* UPDATED: ink text on light background */
     font-family: var(--mono);
@@ -370,11 +411,12 @@
     text-transform: uppercase;
     padding: 0.85rem 0; /* Padding top/bottom but not sides — border-bottom aligns to text */
     text-decoration: none;
-    border-bottom: 0.5px solid var(--mid); /* UPDATED: mid gray underline on light background */
-    transition: color 0.15s, border-color 0.15s;
+    border-bottom: 0.5px solid var(--mid); /* Muted gray underline at rest */
+    transition: color 0.15s, border-color 0.15s; /* Both properties animate smoothly on hover */
   }
 
-  .btn-ghost:hover { border-color: var(--ink); } /* Underline darkens to full ink on hover */
+  .btn-ghost:hover { border-color: var(--ink); }
+  /* On hover: underline darkens from muted gray to full ink black */
 
 
   /* ============================================================
@@ -383,9 +425,14 @@
      The title row at the top of each section — large flush-left
      heading with small right-aligned metadata. Directly mirrors
      the Mingyu magazine banner treatment.
+     NOTE: This class is kept in the CSS but is no longer used in
+     the HTML — all sections now use .section-heading instead.
+     Kept here in case it's needed for future sections.
      ============================================================ */
 
   .section-banner {
+    /* Legacy banner style — large heading left, small metadata right.
+       Currently unused; replaced by .section-heading across all sections. */
     display: flex;
     align-items: baseline; /* Aligns the large title and small meta text along their text baselines —
                                more visually precise than center alignment for mixed font sizes */
@@ -395,6 +442,7 @@
   }
 
   .section-banner-title {
+    /* Large heading inside the legacy .section-banner — not currently in use */
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -402,7 +450,8 @@
   }
 
   .section-banner-meta {
-    /* Small right-aligned label group (e.g. "2023 — 2026 / 6 projects") */
+    /* Small right-aligned label group inside the legacy .section-banner —
+       not currently in use. Would show things like "2023 — 2026 / 6 projects" */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
@@ -412,15 +461,20 @@
   }
 
   .section-heading {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 2.5rem;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    /* The full-width black banner used at the top of every section below the hero:
+       "Projects:", "Capabilities", "About me.", "Get in touch."
+       This is the consistent structural element that gives the page its rhythm —
+       each section starts with a black band containing centered white text,
+       followed by the section's content on the paper background below. */
+    background: var(--ink);   /* Full black background spanning the entire page width */
+    color: var(--paper);      /* Warm white text — readable on the dark background */
+    padding: 2.5rem;          /* Generous padding so the heading has breathing room */
+    font-size: clamp(2rem, 5vw, 3.5rem); /* Fluid sizing — scales with viewport width */
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.03em;  /* Negative tracking — tightens large display type */
     line-height: 1;
-    text-align: center;
-}
+    text-align: center;       /* Centers the heading text within the black band */
+  }
 
 
   /* ============================================================
@@ -431,44 +485,50 @@
      ============================================================ */
 
   .projects-grid {
+    /* The grid container that holds all six project cards.
+       Sits directly below the "Projects:" section-heading black band. */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    grid-template-columns: 1fr 1fr; /* Two equal columns — cards sit side by side in pairs */
   }
 
   .project-card {
+    /* Each individual project card — the entire <a> tag is the card,
+       making the full card surface clickable as a link */
     border-right: 0.5px solid var(--rule);
     border-bottom: 0.5px solid var(--rule); /* Cards separated by hairline rules, not gaps */
     padding: 2.5rem;
     text-decoration: none; /* Removes default underline on the <a> tag wrapping each card */
     color: inherit;         /* Inherits text color from parent instead of showing default link blue */
     display: block;         /* <a> is inline by default; block makes it fill its grid cell */
-    transition: background 0.2s;
+    transition: background 0.2s; /* Smooth background tint appears on hover */
     position: relative;     /* Positioning context for the absolute-placed arrow icon */
     overflow: hidden;
   }
 
   .project-card:nth-child(even) { border-right: none; }
-  /* :nth-child(even) targets every 2nd card (the right column).
-     Removes its right border so we don't double up borders at the grid edge */
+  /* :nth-child(even) targets every 2nd card (the right column cards: 02, 04, 06).
+     Removes their right border so there's no double border at the grid's right edge */
 
   .project-card:hover { background: rgba(10,10,10,0.03); }
-  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity */
+  /* Very subtle tint on hover — rgba(10,10,10,0.03) is near-black at 3% opacity.
+     Signals the card is interactive without being visually heavy. */
 
   .project-card:hover .project-arrow { transform: translate(4px, -4px); }
-  /* On card hover, the arrow moves 4px right and 4px up — a micro-interaction
-     that suggests "go to this link" without being loud */
+  /* On card hover, the ↗ arrow inside the card moves 4px right and 4px up —
+     a micro-interaction suggesting "navigate to this link" */
 
   .project-index {
-    /* Small numbered label at top of card, e.g. "02" */
+    /* The small number at the top of each card: "01", "02", "03", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
-    color: var(--mid);
+    color: var(--mid);    /* Muted gray — supporting context, not primary information */
     margin-bottom: 2rem;
   }
 
   .project-title {
-    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    /* The project name heading inside each card */
+    font-size: clamp(1.4rem, 3vw, 2.2rem); /* Fluid sizing scales with viewport */
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.05;
@@ -476,38 +536,40 @@
   }
 
   .project-tags {
-    /* Flex container for the technology pill tags */
+    /* Flex container that holds the technology pill tags (e.g. "PYTHON", "FLASK") */
     display: flex;
-    flex-wrap: wrap; /* Tags wrap to a new line if they exceed container width */
+    flex-wrap: wrap; /* Tags wrap to a new line if they exceed the container width */
     gap: 6px;
     margin-bottom: 1.5rem;
   }
 
   .tag {
-    /* Individual technology tags — borderless pill badges */
+    /* Individual technology tag pill — e.g. "PYTHON", "UMAP", "R" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    border: 0.5px solid var(--rule);
+    border: 0.5px solid var(--rule); /* Hairline border creates the pill shape */
     padding: 3px 8px;
-    color: var(--mid);
+    color: var(--mid); /* Muted gray — supporting info, not primary content */
   }
 
   .project-desc {
+    /* The short description paragraph beneath the tags on each card */
     font-size: 13px;
     color: var(--mid);
     line-height: 1.7;
-    max-width: 38ch;
+    max-width: 38ch; /* Constrains to ~38 characters per line for comfortable reading */
   }
 
   .project-arrow {
-    /* Diagonal arrow icon anchored to the bottom-right of each card */
+    /* The ↗ diagonal arrow icon pinned to the bottom-right corner of each card.
+       Animates on hover via the .project-card:hover rule above. */
     position: absolute; /* Positioned relative to the card's position: relative */
     bottom: 2.5rem;
     right: 2.5rem;
     font-size: 1.2rem;
-    transition: transform 0.2s; /* Smooth movement on hover (triggered by card:hover rule above) */
+    transition: transform 0.2s; /* Smooth diagonal movement on hover */
   }
 
 
@@ -517,17 +579,24 @@
      like a double-page spread in the Marni editorial. It has
      its own internal two-column layout: black visual panel
      on the left, content on the right.
+     NOTE: The featured card structure is currently not in use —
+     the projects section now uses all standard cards. These
+     rules are kept in case the featured layout is restored.
      ============================================================ */
 
-.project-card.featured {
-    grid-column: 1 / -1;
-    border-right: none;
-    display: block;
-    padding: 0;
-}
+  .project-card.featured {
+    /* When a project card also has the .featured class, it overrides the
+       standard card layout to span the full grid width as a banner card.
+       Currently not used in the HTML but kept for future use. */
+    grid-column: 1 / -1; /* Spans from grid line 1 to -1 (the last line) = full width */
+    border-right: none;  /* No right border needed on a full-width card */
+    display: block;      /* Single-column block layout — no internal grid split */
+    padding: 0;          /* Child panels handle their own padding */
+  }
 
   .featured-visual {
-    /* The black visual panel on the left side of the featured card */
+    /* The black visual panel inside a featured card.
+       Currently not rendered in the HTML — kept for future use. */
     background: var(--ink);
     min-height: 360px;
     display: flex;
@@ -535,38 +604,43 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    z-index: 1;
+    z-index: 1; /* Sits above any content that might bleed through from sections above */
   }
 
   .featured-visual-type {
-    /* The large ghost display type inside the black panel ("DATA LAKE") */
+    /* The large ghost/outline display text inside the featured visual panel.
+       e.g. "VOLNA" or "Projects:" — purely decorative.
+       Currently not rendered in the HTML — kept for future use. */
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 700;
-    color: var(--paper);
-    -webkit-text-stroke: 1px rgba(245,243,239,0.25);
+    color: var(--paper);                          /* Filled with paper white */
+    -webkit-text-stroke: 1px rgba(245,243,239,0.25); /* Faint outline adds depth */
     letter-spacing: -0.04em;
     line-height: 0.9;
-    user-select: none;
+    user-select: none; /* Prevents text selection since it's decorative */
     padding: 2rem;
   }
 
   .featured-visual-badge {
-    /* "Featured — 2026" label pinned to the top-left of the black panel */
+    /* Small "FEATURED — 2026" label pinned to the top-left of the black panel.
+       Currently not rendered in the HTML — kept for future use. */
     position: absolute;
     top: 2rem; left: 2rem;
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(245,243,239,0.5); /* Semi-transparent paper color on dark background */
+    color: rgba(245,243,239,0.5); /* Semi-transparent paper color on the dark background */
   }
 
   .featured-content {
-    /* Right panel of the featured card — project info */
+    /* The content panel on the right side of a featured card —
+       holds the project title, tags, description, and buttons.
+       Currently not rendered in the HTML — kept for future use. */
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Title group at top, description at bottom */
+    justify-content: space-between; /* Title group at top, description/buttons at bottom */
     border-left: 0.5px solid var(--rule);
   }
 
@@ -575,49 +649,60 @@
      SKILLS SECTION — dense editorial columns
      Four equal columns — one per skill category. Dense editorial
      typographic columns like a magazine's credits page.
+     Sits directly below the "Capabilities" section-heading band.
      ============================================================ */
 
   .skills-section {
-    border-bottom: 0.5px solid var(--rule);
-    background: var(--ink);        /* add this */
-    color: var(--paper);           /* add this */
+    /* Wrapper for the four-column skills grid.
+       Sits below the black "Capabilities" section-heading banner.
+       Background is now --paper (light) so the content reads as
+       black text on white — consistent with the other content sections. */
+    border-bottom: 0.5px solid var(--rule); /* Hairline rule closing the section at the bottom */
   }
 
   .skills-grid {
+    /* The four-column grid that holds Languages, Frontend, Data/ML, and Infrastructure columns */
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns. Equivalent to writing 1fr 1fr 1fr 1fr */
+    grid-template-columns: repeat(4, 1fr); /* repeat(4, 1fr) = four equal columns.
+                                               Equivalent to writing: 1fr 1fr 1fr 1fr */
   }
 
   .skill-col {
+    /* Each individual skill column — e.g. the "Languages" column with Python, R, etc. */
     padding: 2.5rem;
-    border-right: 0.5px solid rgba(240,237,232,0.2);  /* Vertical rule between columns */
+    border-right: 0.5px solid rgba(240,237,232,0.2); /* Vertical hairline rule between columns */
   }
 
-  .skill-col:last-child { 
-       border-right: none;
+  .skill-col:last-child {
+    border-right: none;
+    /* :last-child targets the final column (Infrastructure).
+       Removes its right border so there's no line at the section's right edge */
   }
-  /* :last-child removes the border from the final column so there's no line at the right edge */
 
   .skill-col-title {
-    /* Category heading inside each skill column, e.g. "Languages" */
+    /* The category label at the top of each column: "LANGUAGES", "FRONTEND", etc. */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--paper);
+    color: var(--paper);  /* White text — will need updating to var(--mid) if
+                             background is changed back to paper */
     border-bottom: 0.5px solid rgba(240,237,232,0.2);
     padding-bottom: 1rem;
-    border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating heading from list */
+    border-bottom: 0.5px solid var(--rule); /* Horizontal rule separating the title from the list below.
+                                               This second border-bottom declaration overrides the first */
   }
 
   .skill-list {
+    /* The <ul> holding the individual skill items beneath each column title */
     list-style: none; /* Removes default bullet points */
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.6rem; /* Space between each skill item */
   }
 
   .skill-list li {
+    /* Each individual skill item — e.g. "Python", "React / Next.js", "Docker" */
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
@@ -627,182 +712,197 @@
   /* ============================================================
      ABOUT SECTION — asymmetric two-column Marni spread
      Asymmetric 2:3 column split — narrower left column holds
-     the large display heading and location, wider right column
-     holds the body paragraph and timeline. Mirrors the Marni
-     spread's unequal column structure.
+     the location info, wider right column holds the body
+     paragraph and experience timeline.
+     Sits directly below the "About me." section-heading band.
      ============================================================ */
 
   .about-section {
+    /* The two-column content area below the "About me." black header band.
+       Left column (2 parts) holds location. Right column (3 parts) holds
+       the bio paragraph and experience timeline. */
     display: grid;
     grid-template-columns: 2fr 3fr; /* Left column is 2 parts, right is 3 parts of available width */
-    border-bottom: 0.5px solid var(--rule);
+    border-bottom: 0.5px solid var(--rule); /* Hairline rule closing the section */
   }
 
   .about-left {
+    /* The narrower left column — currently holds just the "Based in / San Diego, CA" info
+       pinned to the bottom. The "About me." heading was here but was removed since
+       the section-heading banner above handles that now. */
     padding: 3rem 2.5rem;
-    border-right: 0.5px solid var(--rule);
+    border-right: 0.5px solid var(--rule); /* Vertical rule separating left and right columns */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* "About me." at top, location info pinned to bottom */
-  }
-
-  .about-big-text {
-    /* The large "About me." display heading */
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 0.9; /* Tightly stacked — "About" and "me." overlap vertically */
+    justify-content: space-between; /* Content pinned to bottom via space-between with a single child */
   }
 
   .about-right {
+    /* The wider right column — holds the bio paragraph and the experience timeline */
     padding: 3rem 2.5rem;
     display: grid;
-    grid-template-rows: auto auto; /* Two rows: body paragraph, then timeline */
+    grid-template-rows: auto auto; /* Two rows: bio paragraph on top, timeline below */
     gap: 2rem;
   }
 
   .about-body {
+    /* The bio paragraph: "I work at the intersection of data engineering..." */
     font-size: 15px;
-    line-height: 1.8; /* Generous line height for readable body text */
-    color: var(--mid);
-    max-width: 52ch; /* Constrains line length to ~52 characters for comfortable reading */
+    line-height: 1.8; /* Generous line height for comfortable body text reading */
+    color: var(--mid); /* Muted gray — secondary text, not primary */
+    max-width: 52ch;   /* Constrains to ~52 characters per line — optimal body text measure */
   }
 
   .about-body strong {
-    /* Inline emphasis within the body paragraph */
-    color: var(--ink); /* Overrides the muted gray so bolded terms pop to full black */
+    /* Inline emphasis inside the bio — e.g. "data engineering", "machine learning".
+       CSS overrides the inherited muted gray so these terms stand out. */
+    color: var(--ink); /* Full ink black — pops against the surrounding muted gray */
     font-weight: 500;
   }
 
   .about-timeline {
+    /* Container for all the experience timeline rows */
     display: flex;
     flex-direction: column;
-    gap: 0;
-    border-top: 0.5px solid var(--rule);
+    gap: 0; /* No gap between rows — borders handle the visual separation */
+    border-top: 0.5px solid var(--rule); /* Rule separating timeline from bio paragraph above */
   }
 
   .timeline-item {
-    /* Each entry in the experience timeline */
+    /* Each individual row in the experience timeline —
+       e.g. "2025 - Present | Fashion Market Intelligence Platform" */
     display: grid;
-    grid-template-columns: 6rem 1fr; /* Fixed 6rem year column, flexible content column */
+    grid-template-columns: 6rem 1fr; /* Fixed 6rem date column, flexible content column */
     gap: 1.5rem;
     padding: 1.2rem 0;
-    border-bottom: 0.5px solid var(--rule); /* Rule between each timeline entry */
-    align-items: baseline; /* Aligns the year and title text along their baselines */
+    border-bottom: 0.5px solid var(--rule); /* Hairline rule below each timeline entry */
+    align-items: baseline; /* Aligns the date and title text along their text baselines */
   }
 
   .timeline-year {
+    /* The date range on the left side of each timeline row: "2025 - Present" */
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: var(--mid);
+    color: var(--mid); /* Muted — supporting context, not the primary information */
   }
 
   .timeline-title {
+    /* The job/project title on the right side of each timeline row */
     font-size: 14px;
     font-weight: 500;
   }
 
   .timeline-place {
+    /* The secondary line beneath the title: institution or organization name */
     font-size: 12px;
-    color: var(--mid);
+    color: var(--mid); /* Muted gray — secondary information */
     margin-top: 2px;
   }
 
 
   /* ============================================================
      CONTACT SECTION
-     Two-column layout: large display headline on the left,
-     link rows on the right. Right column uses flex-end so
-     the links stack from the bottom up.
+     Two-column layout: availability note on the left,
+     contact link rows (email, GitHub, LinkedIn, resume) on
+     the right. Sits directly below the "Get in touch." band.
      ============================================================ */
 
   .contact-section {
+    /* The two-column content area below the "Get in touch." black header band */
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 40vh; /* Ensures the section has substantial vertical presence */
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    min-height: 40vh; /* Ensures the section has substantial vertical presence on the page */
   }
 
   .contact-left {
+    /* The left column — holds the availability note:
+       "Open to full-time roles, contract work, and research collaborations." */
     padding: 3rem 2.5rem;
-    border-right: 0.5px solid var(--rule);
+    border-right: 0.5px solid var(--rule); /* Vertical rule between left and right columns */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; /* Content distributed vertically */
   }
 
   .contact-headline {
-    /* The large "Get in touch." stacked heading */
+    /* Legacy style for the large "Get in touch." stacked heading that used to live
+       inside contact-left. Now replaced by the section-heading banner above.
+       Kept in case it's needed again. */
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 0.95; /* Tight stacking for multi-line display heading */
+    line-height: 0.95;
   }
 
   .contact-right {
-    /* Contact links sit at the bottom of the column */
+    /* The right column — holds the four contact method rows:
+       Email, GitHub, LinkedIn, and Resume download */
     padding: 3rem 2.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-end; /* Rows are pushed to the bottom of the column */
     gap: 1.5rem;
   }
 
   .contact-link-row {
-    /* Each contact method (email, GitHub, etc.) as a label/value pair */
+    /* Each contact method displayed as a label/value pair on one line —
+       e.g. "EMAIL" on the left, "rj.j.newton@gmail.com" on the right */
     display: flex;
-    justify-content: space-between; /* Label left-aligned, value right-aligned */
+    justify-content: space-between; /* Label pushed to far left, value to far right */
     align-items: center;
-    border-top: 0.5px solid var(--rule); /* Rule above each row */
+    border-top: 0.5px solid var(--rule); /* Hairline rule above each row */
     padding-top: 1rem;
   }
 
   .contact-link-label {
-    /* Left side: "Email", "GitHub", etc. */
+    /* The left side label: "EMAIL", "GITHUB", "LINKEDIN", "RESUME" */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mid);
+    color: var(--mid); /* Muted gray — the label is supporting context for the link */
   }
 
   .contact-link-val {
-    /* Right side: the actual link text */
+    /* The right side value — the actual clickable link text */
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     color: var(--ink);
     border-bottom: 0.5px solid transparent; /* Invisible border held in reserve —
-                                                keeps layout stable when border appears on hover */
-    transition: border-color 0.15s;
+                                                prevents layout shift when it appears on hover */
+    transition: border-color 0.15s; /* Smooth underline reveal on hover */
   }
 
   .contact-link-val:hover { border-color: var(--ink); }
-  /* On hover, the transparent border becomes visible — a subtle underline reveals itself */
+  /* On hover: a hairline underline appears beneath the link text,
+     revealing itself from the transparent reserve border above */
 
 
   /* ============================================================
      FOOTER
-     Minimal two-item row with the same hairline border treatment
-     used throughout.
+     Minimal two-item row at the very bottom of the page.
+     Left side: "RJ NEWTON — DEVELOPER PORTFOLIO"
+     Right side: "© 2026. ALL RIGHTS RESERVED."
      ============================================================ */
 
   footer {
     padding: 1.2rem 2.5rem;
-    border-top: 0.5px solid var(--rule);
+    border-top: 0.5px solid var(--rule); /* Hairline rule separating footer from contact section */
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Left text and right text pushed to opposite edges */
     align-items: center;
   }
 
   footer p {
+    /* Both text items in the footer use the same monospace label style */
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mid);
+    color: var(--mid); /* Muted gray — footer is low-hierarchy supporting information */
   }
-
 
   /* ============================================================
      ANIMATIONS
