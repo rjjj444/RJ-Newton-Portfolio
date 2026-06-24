@@ -975,104 +975,110 @@
     </div>
   </div>
 
-  <div class="projects-grid">
-
-    <!-- ── FEATURED CARD (spans full width) ── -->
-    <a href="#" class="project-card featured">
-    <!-- The entire card is an <a> tag — makes the full area clickable.
-         href="#" is a placeholder — replace with the actual project URL. -->
-
+  <!-- ── FEATURED CARD: VOLNA (spans full width) ── -->
+    <a href="https://volnatrends.com" target="_blank" class="project-card featured">
+    <!-- target="_blank" opens the link in a new tab — good practice for external links -->
+ 
       <div class="featured-visual">
         <p class="featured-visual-badge">Featured — 2026</p>
-        <div class="featured-visual-type">DATA<br>LAKE</div>
+        <div class="featured-visual-type">Projects</div>
+        <!-- Decorative ghost display type — purely visual, user-select: none in CSS -->
       </div>
-
+ 
       <div class="featured-content">
         <div>
           <p class="project-index">01 — Featured</p>
-          <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Real-Time Analytics Pipeline</h3>
+          <h3 class="project-title" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">Fashion Market<br>Intelligence Platform</h3>
           <!-- <h3> = third-level heading. Correct hierarchy: h1 → h2 → h3 -->
           <div class="project-tags" style="margin-top: 1.2rem;">
             <span class="tag">Python</span>
             <!-- Each <span> is an inline element styled as a tech tag pill -->
-            <span class="tag">Kafka</span>
-            <span class="tag">Spark</span>
+            <span class="tag">Flask</span>
+            <span class="tag">Supabase</span>
             <span class="tag">PostgreSQL</span>
+            <span class="tag">JavaScript</span>
           </div>
         </div>
-        <p class="project-desc">Ingests 2M+ events/day from distributed sensors, aggregates into queryable time-series dashboards, and surfaces anomaly alerts in under 400ms.</p>
+        <p class="project-desc">Relational database platform tracking 150+ brands, 1,600+ collections, and 203 aesthetic tags across nine interconnected tables. Features Google Trends integration and style-matching methodology rooted in consumer psychology.</p>
         <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
-          <a href="#" class="btn-primary">Case study</a>
-          <a href="#" class="btn-ghost">GitHub ↗</a>
+          <a href="https://volnatrends.com" target="_blank" class="btn-primary">Visit site</a>
+          <a href="https://github.com/rjjj444" target="_blank" class="btn-ghost">GitHub ↗</a>
         </div>
       </div>
     </a>
-
-    <!-- ── STANDARD PROJECT CARDS (02 – 06) ── -->
-
-    <a href="#" class="project-card">
+ 
+    <!-- ── CARD 02: DOLPHIN UMAP CLASSIFIER ── -->
+    <a href="https://github.com/rjjj444/Dolphin-UMAP-Model" target="_blank" class="project-card">
       <p class="project-index">02</p>
-      <h3 class="project-title">ML Model<br>Serving API</h3>
-      <div class="project-tags">
-        <span class="tag">FastAPI</span>
-        <span class="tag">PyTorch</span>
-        <span class="tag">Docker</span>
-      </div>
-      <p class="project-desc">Scalable inference endpoint that wraps fine-tuned transformer models behind a versioned REST layer with A/B routing.</p>
-      <span class="project-arrow">↗</span>
-      <!-- ↗ is a unicode arrow character. CSS positions it absolutely
-           in the bottom-right corner and animates it on card hover. -->
-    </a>
-
-    <a href="#" class="project-card">
-      <p class="project-index">03</p>
-      <h3 class="project-title">Design System<br>Component Library</h3>
-      <div class="project-tags">
-        <span class="tag">React</span>
-        <span class="tag">TypeScript</span>
-        <span class="tag">Storybook</span>
-      </div>
-      <p class="project-desc">60+ accessible, themeable components with token-based theming, published to npm with automated visual regression testing.</p>
-      <span class="project-arrow">↗</span>
-    </a>
-
-    <a href="#" class="project-card">
-      <p class="project-index">04</p>
-      <h3 class="project-title">Vocalization<br>UMAP Classifier</h3>
+      <h3 class="project-title">Dolphin UMAP<br>Classifier</h3>
       <div class="project-tags">
         <span class="tag">Python</span>
         <span class="tag">UMAP</span>
         <span class="tag">Librosa</span>
         <span class="tag">Scikit-learn</span>
       </div>
-      <p class="project-desc">Acoustic embedding model for dolphin vocalizations with dimensionality reduction, kNN clustering, and silhouette scoring pipeline.</p>
+      <p class="project-desc">Acoustic embedding pipeline for dolphin vocalizations. Adapted from meerkat vocalization research with original RI/ARI metrics, modular flat scripts, and bandpass filtering retuned to 300–3000 Hz.</p>
+      <span class="project-arrow">↗</span>
+      <!-- ↗ is a unicode arrow. CSS positions it absolutely in the bottom-right
+           corner and animates it upward-right on card hover. -->
+    </a>
+ 
+    <!-- ── CARD 03: DOLPHIN CNN WHISTLE DETECTOR ── -->
+    <a href="https://github.com/rjjj444" target="_blank" class="project-card">
+      <p class="project-index">03</p>
+      <h3 class="project-title">Dolphin Whistle<br>CNN Detector</h3>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">TensorFlow</span>
+        <span class="tag">Librosa</span>
+        <span class="tag">Raven Pro</span>
+      </div>
+      <p class="project-desc">CNN-based whistle detection model integrating Raven Pro selection tables and the SEANOE public dataset. Achieves strong early detection results on held-out dolphin vocalization recordings.</p>
       <span class="project-arrow">↗</span>
     </a>
-
-    <a href="#" class="project-card">
+ 
+    <!-- ── CARD 04: SEM REPLICATION STUDY ── -->
+    <a href="https://github.com/rjjj444" target="_blank" class="project-card">
+      <p class="project-index">04</p>
+      <h3 class="project-title">Blind Box SEM<br>Replication Study</h3>
+      <div class="project-tags">
+        <span class="tag">R</span>
+        <span class="tag">SEM</span>
+        <span class="tag">Psychology</span>
+        <span class="tag">Statistics</span>
+      </div>
+      <p class="project-desc">Structural equation model replication of Zhang & Zhang's blind box consumer behavior paper (Frontiers in Psychology), omitting the functional value variable to test model robustness.</p>
+      <span class="project-arrow">↗</span>
+    </a>
+ 
+    <!-- ── CARD 05: MODELING PORTFOLIO SITE ── -->
+    <a href="https://rjnewton.com" target="_blank" class="project-card">
       <p class="project-index">05</p>
-      <h3 class="project-title">Fashion Trend<br>Intelligence Platform</h3>
+      <h3 class="project-title">RJ Newton<br>Modeling Portfolio</h3>
       <div class="project-tags">
-        <span class="tag">Flask</span>
-        <span class="tag">Supabase</span>
-        <span class="tag">PostgreSQL</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">GSAP</span>
       </div>
-      <p class="project-desc">Database-driven platform tracking 150+ brands, 1,600+ collections with interconnected schema for trend pattern analysis.</p>
+      <p class="project-desc">Hand-coded editorial portfolio site for modeling, creative direction, and styling work. Features cinematic background compositing, GSAP parallax, and individual campaign pages.</p>
       <span class="project-arrow">↗</span>
     </a>
-
-    <a href="#" class="project-card">
+ 
+    <!-- ── CARD 06: THIS DEV PORTFOLIO ── -->
+    <a href="https://rjncodes.dev" target="_blank" class="project-card">
       <p class="project-index">06</p>
-      <h3 class="project-title">E-Commerce<br>Recommender</h3>
+      <h3 class="project-title">RJ Newton<br>Dev Portfolio</h3>
       <div class="project-tags">
-        <span class="tag">Node.js</span>
-        <span class="tag">Redis</span>
-        <span class="tag">TensorFlow.js</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">GitHub Pages</span>
       </div>
-      <p class="project-desc">Collaborative filtering model served via edge functions, updating user embeddings on each interaction with sub-50ms response times.</p>
+      <p class="project-desc">This site. Hand-coded editorial portfolio inspired by fashion magazine design systems — Balenciaga campaign typography, Marni spread grid structure, and Mingyu magazine banner treatment.</p>
       <span class="project-arrow">↗</span>
     </a>
-
+ 
   </div>
 </section>
 
