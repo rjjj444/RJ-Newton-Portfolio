@@ -417,6 +417,20 @@
     z-index: 1;              /* keeps text above the sliding panel */
 }
 
+.btn-arrow {
+    position: relative;
+    z-index: 1;          /* sits above the sliding panel like the text */
+    opacity: 0;          /* invisible at rest */
+    margin-left: 0.5rem;
+    transition: opacity 0.2s, margin-left 0.2s;
+    color: var(--ink);   /* black arrow */
+}
+
+.btn-primary:hover .btn-arrow {
+    opacity: 1;          /* appears on hover */
+    margin-left: 0.75rem; /* slides slightly right on hover */
+}
+
   .btn-ghost {
     /* The underline-only button — used for "GET IN TOUCH ↗" and "GITHUB ↗".
        No background fill, just text with a bottom border underline. */
@@ -1050,7 +1064,7 @@
 
     <div class="hero-cta-row" style="margin-top: 2rem;">
       <!-- <div> groups the two buttons and applies flex layout via .hero-cta-row -->
-      <a href="#projects" class="btn-primary"><span>View work</span></a>
+      <a href="#projects" class="btn-primary"><span>View work</span><span class="btn-arrow">→</span></a>
       <!-- Anchor styled as a filled button — scrolls to projects section -->
       <a href="#contact" class="btn-ghost" style="margin-left: 1rem;">Get in touch ↗</a>
       <!-- Ghost/text button — ↗ is a unicode diagonal arrow character -->
