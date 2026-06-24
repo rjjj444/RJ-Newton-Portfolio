@@ -411,6 +411,16 @@
     text-align: right;
   }
 
+  .section-heading {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
 
   /* ============================================================
      PROJECTS GRID
@@ -508,14 +518,12 @@
      on the left, content on the right.
      ============================================================ */
 
-  .project-card.featured {
-    grid-column: 1 / -1; /* Spans from column line 1 to -1 (the last line) — full width */
+.project-card.featured {
+    grid-column: 1 / -1;
     border-right: none;
-    display: grid;
-    grid-template-columns: 1fr; /* Internal two-column split */
-    gap: 0;
-    padding: 0; /* Padding is handled by each internal child instead */
-  }
+    display: block;
+    padding: 0;
+}
 
   .featured-visual {
     /* The black visual panel on the left side of the featured card */
@@ -1083,10 +1091,7 @@
      id="skills" is the scroll target for the nav link.
      ============================================================ -->
 <section id="skills" class="skills-section">
-
-<div class="section-banner" style="justify-content: center;">
-    <h2 class="section-banner-title" style="text-align: center;">Capabilities</h2>
-</div>
+  <div class="section-heading">Capabilities</div>
 
   <div class="skills-grid">
 
@@ -1221,6 +1226,7 @@
      the hero "Get in touch" button.
      ============================================================ -->
 <section id="contact" class="contact-section">
+  <div class="section-heading">Get in touch.</div>
 
   <div class="contact-left">
     <p class="hero-eyebrow">Let's work together</p>
