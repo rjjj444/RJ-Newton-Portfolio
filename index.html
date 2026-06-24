@@ -201,7 +201,7 @@
        height: 90vh scales the figure to 90% of the viewport height —
        increase to show more of the figure, decrease to show less.
        width: auto maintains the natural aspect ratio with no distortion. */
-    height: 40vh;        /* vh = viewport height units. 90vh = 90% of the visible screen height.
+    height: 65vh;        /* vh = viewport height units. 90vh = 90% of the visible screen height.
                             Adjust this value to show more or less of the figure. */
     width: auto;         /* Maintains the image's natural aspect ratio — no stretching or squishing */
     object-fit: contain; /* Ensures the full figure fits without any cropping */
@@ -1732,7 +1732,11 @@
   // the browser starts downloading it automatically. We just need a reference
   // to it to detect when it finishes loading.
 
-  img.onload = () => heroBgImage.classList.add('loaded');
+if (img.complete) {
+    heroBgImage.classList.add('loaded');
+} else {
+    img.onload = () => heroBgImage.classList.add('loaded');
+}
   // img.onload fires when the browser confirms the image has fully downloaded.
   // () => is an arrow function — shorthand for function() {}.
   // classList.add('loaded') adds the CSS class "loaded" to the wrapper div,
