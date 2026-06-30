@@ -263,22 +263,57 @@
     margin-bottom: 1.5rem;
   }
 
-  .hero-name {
-    /* The large "RJ Newton." display heading — the most prominent text on the page.
-       clamp(min, preferred, max) — responsive font sizing without media queries:
-       - Never smaller than 3.5rem
-       - Ideally 7vw (7% of viewport width) — scales with screen size
-       - Never larger than 6rem
-       This is the key technique for display type that adapts fluidly */
+.here-name-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  z-index: 2; /* Ensure it stays above the rain effect */
+}
+     
+.hero-name {
+    position: relative; /* anchors the absolutely-positioned glitch overlay below */
     font-size: clamp(3.5rem, 7vw, 6rem);
     font-weight: 700;
-    line-height: 0.92;        /* Tighter than 1 — pulls lines of the name closer together.
-                                 Intentional in display type; would be unreadable at body sizes */
-    letter-spacing: -0.03em;  /* Negative tracking — tightens letter spacing on large type.
-                                 Large fonts look better with letters pulled slightly closer */
+    line-height: 0.92;
+    letter-spacing: -0.03em;
     margin-bottom: 2rem;
-    color: var(--ink);        /* UPDATED: full ink black on the light background */
+    color: var(--ink); /* real text stays your normal ink color, unaffected */
+}
+
+.hero-name-glitch {
+  /* Duplicate copy of the name, layered on top via position: absolute,
+     sliced and offset to create the glitch flicker. aria-hidden in the
+     HTML keeps screen readers from announcing it twice. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: glitch 2s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-2px, -2px);
+  color: #0f0;
+  text-shadow: 0 0 5px #0f0, 0 0 15px #0f0;
+  pointer-events: none; /* purely visual, doesn't block clicks/selection */
+}
+
+     /* Glitch effect for the text */
+@keyframes glitch {
+  0%, 100% {
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(0);
   }
+  33% {
+    clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
+    transform: translate(-5px, -5px);
+  }
+  66% {
+    clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);
+    transform: translate(5px, 5px);
+  }
+}
+
 
   .hero-desc {
     /* The paragraph of body copy beneath the name:
@@ -1070,10 +1105,14 @@
     <p class="hero-eyebrow">Software Dev / Data Scientist / Web Dev</p>
     <!-- <p> = paragraph. Used for a standalone text unit even when it's a single line. -->
 
-    <h1 class="hero-name fade-in-delay-1">RJ<br>Newton.</h1>
+<h1 class="hero-name fade-in-delay-1">
+  RJ<br>Newton.
+  <span class="hero-name-glitch" aria-hidden="true">RJ<br>Newton.</span>
+</h1>
     <!-- <h1> = the most important heading on the page — only one per page.
          <br> forces a line break so "RJ" and "Newton." stack on separate lines.
-         fade-in-delay-1 staggers entrance 0.1s after the eyebrow. -->
+         fade-in-delay-1 staggers entrance 0.1s after the eyebrow. 
+          Also allows extra layer for glitch effect. -->
 
     <p class="hero-desc fade-in-delay-2">
       Full-stack developer and data scientist. I build systems that process information at scale and interfaces that make complexity readable.
