@@ -293,9 +293,10 @@
   animation: glitch 6s infinite steps(1); 
   clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   transform: translate(-2px, -2px);
-   color: var(--ink);
+  color: var(--ink);
   text-shadow: 1.5px 0 0 rgba(178, 74, 74, 0.5), -1.5px 0 0 rgba(74, 120, 178, 0.5);
   pointer-events: none; /* purely visual, doesn't block clicks/selection */
+  opacity: 0; /* NEW — hidden by default so neither line shows a ghost at rest */
 }
 
      /* Glitch effect for the text */
@@ -304,18 +305,22 @@
      Everything after that (8% → 100%) holds the resting state,
      which is what creates the pause before it repeats. */
   0%, 92%, 100% {
+    opacity: 0;                              /* NEW — fully hidden during the pause */
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
     transform: translate(0);
   }
   93% {
+    opacity: 1;                              /* NEW — appears only for the burst */
     clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
     transform: translate(-5px, -5px);
   }
   95% {
+    opacity: 1;
     clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);
     transform: translate(5px, 5px);
   }
   97% {
+    opacity: 1;
     clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
     transform: translate(-3px, 3px);
   }
