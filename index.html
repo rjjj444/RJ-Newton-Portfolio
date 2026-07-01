@@ -290,29 +290,48 @@
   top: 0;
   left: 0;
   width: 100%;
-  animation: glitch 2s infinite;
+  aanimation: glitch 6s infinite steps(1); 
   clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   transform: translate(-2px, -2px);
-  color: #0f0;
-  text-shadow: 0 0 5px #0f0, 0 0 15px #0f0;
+  color: var(--mid);
+  text-shadow: 1px 0 0 var(--ink), -1px 0 0 var(--rule);
   pointer-events: none; /* purely visual, doesn't block clicks/selection */
 }
 
      /* Glitch effect for the text */
 @keyframes glitch {
-  0%, 100% {
+  /* Glitch burst happens fast, in the first ~8% of the cycle.
+     Everything after that (8% → 100%) holds the resting state,
+     which is what creates the pause before it repeats. */
+  0%, 92%, 100% {
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
     transform: translate(0);
   }
-  33% {
+  93% {
     clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
     transform: translate(-5px, -5px);
   }
-  66% {
+  95% {
     clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);
     transform: translate(5px, 5px);
   }
+  97% {
+    clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
+    transform: translate(-3px, 3px);
+  }
 }
+
+     /* 
+     The pause length is controlled by the ratio, not a separate property. 
+     With animation-duration: 6s and keyframes sitting at 92–100%, 
+     the "normal" state holds for roughly the last 5.5 seconds of each 6-second cycle — that's your pause. 
+     Want a longer wait between glitches? 
+     Increase the duration (e.g. 10s) without changing the percentages, and the pause stretches proportionally.
+     Consider steps() instead of the default ease. 
+     Right now the browser smoothly interpolates between your keyframes, 
+     which can make the glitch burst look like it's sliding rather than snapping. 
+     Adding animation-timing-function: steps(1) makes it jump instantly between keyframe states instead — closer to a real glitch:
+     */
 
 
   .hero-desc {
