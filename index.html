@@ -296,7 +296,7 @@
   color: var(--ink);
   text-shadow: 1.5px 0 0 rgba(178, 74, 74, 0.5), -1.5px 0 0 rgba(74, 120, 178, 0.5);
   pointer-events: none; /* purely visual, doesn't block clicks/selection */
-  opacity: 0; /* NEW — hidden by default so neither line shows a ghost at rest */
+  opacity: 0; /* hidden by default so neither line shows a ghost at rest */
 }
 
      /* Glitch effect for the text */
@@ -305,12 +305,12 @@
      Everything after that (8% → 100%) holds the resting state,
      which is what creates the pause before it repeats. */
   0%, 92%, 100% {
-    opacity: 0;                              /* NEW — fully hidden during the pause */
+    opacity: 0;                              /* fully hidden during the pause */
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
     transform: translate(0);
   }
   93% {
-    opacity: 1;                              /* NEW — appears only for the burst */
+    opacity: 1;                              /* appears only for the burst */
     clip-path: polygon(0 0, 100% 0, 100% 15%, 0 15%);
     transform: translate(-5px, -5px);
   }
@@ -1071,6 +1071,7 @@
 </head>
 <body>
 
+
 <!-- ============================================================
      NAVIGATION
      Fixed bar. <nav> is a semantic HTML5 landmark element —
@@ -1100,9 +1101,11 @@
      ============================================================ -->
 <section class="hero">
 
-     <!-- Three.js cloth simulation — floats centre-right in the hero -->
-<canvas id="cloth-canvas"></canvas>
-     
+  <!-- Three.js cloth simulation — floats centre-right in the hero.
+       TEMPORARILY DISABLED: canvas element commented out below.
+       Remove this comment wrapper to bring it back. -->
+  <!-- <canvas id="cloth-canvas"></canvas> -->
+
 <!-- ============================================================
      HERO PORTRAIT IMAGE
      A single <div> containing the <img> tag.
@@ -1489,10 +1492,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <!-- Loads GSAP (GreenSock Animation Platform) from a CDN.
      Handles the smooth parallax animation on mousemove.
-     Must load before our inline script below uses gsap.to(). -->
+     Must load before our inline script below uses gsap.to().
+     GSAP stays active here — it's still used by the parallax
+     mousemove script further down, independent of the cloth sim. -->
+
+<!--
+     TEMPORARILY DISABLED: Three.js library + cloth simulation script.
+     This is ONE single HTML comment wrapping BOTH the script src tag for
+     three.min.js AND the full cloth simulation script block below it, so the
+     comment fully contains matching open/close tag pairs with nothing left dangling
+     outside it. To restore the cloth effect: remove the two comment-wrapper lines
+     immediately before and after this whole block, and also un-comment the
+     canvas element with id cloth-canvas up in the hero section above.
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
 // ============================================================
 // THREE.JS CLOTH SIMULATION
@@ -1780,7 +1793,8 @@
  
 })();
 </script>
-     
+-->
+
 <script>
 
   // ── HERO IMAGE FADE-IN ──────────────────────────────────────────────────────
